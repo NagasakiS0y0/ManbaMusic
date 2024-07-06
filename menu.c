@@ -107,7 +107,7 @@ void menu()
         menu_recommend();
         break;
     case 0:
-    return 1;
+        exit(0);
     default:
         printf("´íÎó\n");
         break;
