@@ -3,6 +3,8 @@
 
 typedef struct song
 {
+    struct song *prev;  // 指向上一个节点
+    int num;  // 歌曲编号
 	int count;  // 播放次数
 	char name[50];  // 歌曲名
 	char singer[50];  // 歌手
