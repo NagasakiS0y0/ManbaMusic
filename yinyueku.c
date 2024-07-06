@@ -23,13 +23,13 @@ void menu1()
     int i;
     printf("            Manba Music\n");
     printf("*************************************\n");
-    printf("            1.Ìí¼Ó¸èÇú\n");
-    printf("            2.É¾³ı¸èÇú\n");
-    printf("            3.ĞŞ¸Ä¸èÇú\n");
-    printf("            4.²é¿´¸èÇúµ¥\n");
-    printf("            0.·µ»ØÖ÷²Ëµ¥\n");
+    printf("            1.æ·»åŠ æ­Œæ›²\n");
+    printf("            2.åˆ é™¤æ­Œæ›²\n");
+    printf("            3.ä¿®æ”¹æ­Œæ›²\n");
+    printf("            4.æŸ¥çœ‹æ­Œæ›²å•\n");
+    printf("            0.è¿”å›ä¸»èœå•\n");
     printf("*************************************\n");
-    printf("ÇëÊäÈëÄúµÄÑ¡Ôñ£º[0-4]\n");
+    printf("è¯·è¾“å…¥æ‚¨çš„é€‰æ‹©ï¼š[0-4]\n");
 }
 
 struct song * create()
@@ -40,7 +40,7 @@ struct song * create()
     fp1=fopen("song.txt","r");
     if(fp1==NULL)
     {
-        puts("ÎŞ·¨´ò¿ªÎÄ¼ş¡£");
+        puts("æ— æ³•æ‰“å¼€æ–‡ä»¶ã€‚");
         exit(0);
     }
     while (fscanf(fp1,"%d%s%s",&p1->num,p1->name,p1->singer)!=EOF)
@@ -61,55 +61,7 @@ struct song * create()
     return(head);
 }
 
-/*void search(struct song *head)
-{
-    struct song *p;
-    p=head;
-    int j=0,i=0;
-    char x[20],y[20];
-        
-    scanf("%d",&j);
-    switch (j)
-    {
-        case 1:printf("ÇëÊäÈëÒª²éÕÒµÄ±àºÅ");
-                scanf("%d",&i);
-                while(p!=NULL)
-                {
-                    if(p->num==i)
-                    {
-                        printf("%d %s %s\n",p->num,p->name,p->singer);
-                    }
-                    p=p->next;
-                }
-                   break;
 
-        case 2:printf("ÇëÊäÈëÒª²éÕÒµÄ¸èÃû");
-                scanf("%s",&x);
-                while(p!=NULL)
-                {
-                    if(strcmp(p->name,x)==0)
-                    {
-                        printf("%d %s %s\n",p->num,p->name,p->singer);
-                    }
-                    p=p->next;
-                }
-                break;
-
-        case 3:printf("ÇëÊäÈëÒª²éÕÒµÄ¸èÊÖ");
-                scanf("%s",&y);
-                while(p!=NULL)
-                {
-                    if(strcmp(p->singer,y)==0)
-                    {
-                        printf("%d %s %s\n",p->num,p->name,p->singer);
-                    }
-                    p=p->next;
-                }
-                break;
-        case 0:return 1;
-        default:printf("\n ÊäÈë´íÎó£¬ÇëÖØĞÂÊäÈë£¡\n");
-        };
-}*/
 void print(struct song *head)
 {
     struct song *p;
@@ -130,7 +82,7 @@ void save(struct song *head)
     fp2=fopen("song.txt","w");
     if(fp2==NULL)
     {
-        puts("ÎŞ·¨´ò¿ªÎÄ¼ş¡£");
+        puts("æ— æ³•æ‰“å¼€æ–‡ä»¶ã€‚");
         exit(0);
     }
     while (p!=NULL)
@@ -162,15 +114,15 @@ struct song *modify_Node(struct song *head, int x)
     }
     if (found == 1) 
     {
-        printf("ÇëÊäÈëĞŞ¸ÄºóµÄ¸èÃû: ");
+        printf("è¯·è¾“å…¥ä¿®æ”¹åçš„æ­Œå: ");
         scanf("%s", p->name);
-        printf("ÇëÊäÈëĞŞ¸ÄºóµÄ¸èÊÖ: ");
+        printf("è¯·è¾“å…¥ä¿®æ”¹åçš„æ­Œæ‰‹: ");
         scanf("%s", p->singer);
         return head;
     } 
     else 
     {
-        printf("ÕÒ²»µ½Êı¾İ!");
+        printf("æ‰¾ä¸åˆ°æ•°æ®!");
         return head;
     }
 }
@@ -208,7 +160,7 @@ struct song *Del_Node(struct song *head,int x)
     }
     else
     {
-        printf("ÕÒ²»µ½Êı¾İ!");
+        printf("æ‰¾ä¸åˆ°æ•°æ®!");
     }
     return head;
 }
@@ -248,17 +200,17 @@ struct song *insert_Node (struct song *head ,char y[20],char z[20])
 
 void search(char *way) 
 {
-    WIN32_FIND_DATA Data;// ´æ´¢ÎÄ¼şĞÅÏ¢µÄ½á¹¹Ìå
-    HANDLE hFind;// ²éÕÒ¾ä±ú
+    WIN32_FIND_DATA Data;// å­˜å‚¨æ–‡ä»¶ä¿¡æ¯çš„ç»“æ„ä½“
+    HANDLE hFind;// æŸ¥æ‰¾å¥æŸ„
 
-    char path[MAX_PATH];// ¶¨ÒåÒ»¸ö×Ö·û´®Êı×é£¬ÓÃÓÚ´æ´¢ËÑË÷Â·¾¶
-    snprintf(path, sizeof(path), "%s\\*.mp3", way);// ½« \*.mp3 ¸½¼Óµ½ÎÄ¼ş¼ĞÂ·¾¶ºóÃæ
+    char path[MAX_PATH];// å®šä¹‰ä¸€ä¸ªå­—ç¬¦ä¸²æ•°ç»„ï¼Œç”¨äºå­˜å‚¨æœç´¢è·¯å¾„
+    snprintf(path, sizeof(path), "%s\\*.mp3", way);// å°† \*.mp3 é™„åŠ åˆ°æ–‡ä»¶å¤¹è·¯å¾„åé¢
 
     hFind = FindFirstFile(path, &Data);
 
     if (hFind == INVALID_HANDLE_VALUE)
     {
-        printf("ÔÚÄ¿Â¼ÖĞÃ»ÓĞÕÒµ½MP3ÎÄ¼ş¡£\n");
+        printf("åœ¨ç›®å½•ä¸­æ²¡æœ‰æ‰¾åˆ°MP3æ–‡ä»¶ã€‚\n");
         return;
     } 
     else 
@@ -266,16 +218,16 @@ void search(char *way)
         FILE *fp = fopen("song.txt", "w");
         int num = 1;
         do {
-            char *dotPos = strrchr(Data.cFileName, '.');// ÕÒµ½ÎÄ¼şÃûµÄºó×ºÎ»ÖÃ
-            if (dotPos != NULL) // É¾³ıÎÄ¼şÃûÖĞµÄºó×º
+            char *dotPos = strrchr(Data.cFileName, '.');// æ‰¾åˆ°æ–‡ä»¶åçš„åç¼€ä½ç½®
+            if (dotPos != NULL) // åˆ é™¤æ–‡ä»¶åä¸­çš„åç¼€
             {
                 *dotPos = '\0';
             }
-            printf("ÕÒµ½MP3ÎÄ¼ş: %s.mp3\n", Data.cFileName);
-            fprintf(fp, "%d %s\n", num++, Data.cFileName); // Ğ´ÈëĞòºÅºÍÎÄ¼şÃûµ½ song.txt
+            printf("æ‰¾åˆ°MP3æ–‡ä»¶: %s.mp3\n", Data.cFileName);
+            fprintf(fp, "%d %s\n", num++, Data.cFileName); // å†™å…¥åºå·å’Œæ–‡ä»¶ååˆ° song.txt
         } 
         while (FindNextFile(hFind, &Data) != 0);
-        FindClose(hFind);// ¹Ø±Õ²éÕÒ¾ä±ú
+        FindClose(hFind);// å…³é—­æŸ¥æ‰¾å¥æŸ„
         fclose(fp);
     }
 }
@@ -321,11 +273,11 @@ int main()
     int i,j;
     char x[20],y[20];
     struct song *h;
-    printf("´ÓÎÄ¼ş¶ÁÈ¡Êı¾İ\n");
-    char *way = "D:\\code\\C language\\7\\project\\c\\output";// Ìæ»»ÎªÊµ¼ÊÂ·¾¶
-    search(way);// µ÷ÓÃ search º¯ÊıÕÒ³ö.mp3ÎÄ¼ş
+    printf("ä»æ–‡ä»¶è¯»å–æ•°æ®\n");
+    char *way = "D:\\code\\C language\\7\\project\\c\\output";// æ›¿æ¢ä¸ºå®é™…è·¯å¾„
+    search(way);// è°ƒç”¨ search å‡½æ•°æ‰¾å‡º.mp3æ–‡ä»¶
     h=create();
-    printf("´´½¨µÄ¸èÇúµ¥ÈçÏÂ:\n");
+    printf("åˆ›å»ºçš„æ­Œæ›²å•å¦‚ä¸‹:\n");
     print(h);
     while (1)
     {
@@ -333,7 +285,7 @@ int main()
         scanf("%d",&i);
         switch (i)
         {
-            case 1:printf("ÇëÊäÈëĞèÒªÌí¼ÓµÄ¸èÇú£¨¸èÃû ¸èÊÖ£©:\n");
+            case 1:printf("è¯·è¾“å…¥éœ€è¦æ·»åŠ çš„æ­Œæ›²ï¼ˆæ­Œå æ­Œæ‰‹ï¼‰:\n");
                 scanf("%s%s",&x,&y);
                 h=insert_Node(h,x,y);
                 paixu(h);
@@ -341,14 +293,14 @@ int main()
                 save(h);
                 system("cls");
                 break;
-            case 2:printf("ÇëÊäÈëĞèÒªÉ¾³ıµÄ¸èÇú£¨ĞòºÅ£©:\n");
+            case 2:printf("è¯·è¾“å…¥éœ€è¦åˆ é™¤çš„æ­Œæ›²ï¼ˆåºå·ï¼‰:\n");
                 scanf("%d",&j);
                 h=Del_Node(h,j);
                 paixu(h);
                 system("cls");
                 save(h);
                 break;
-            case 3:printf("ÇëÊäÈëĞèÒªĞŞ¸ÄµÄ¸èÇú£¨ĞòºÅ£©:\n");
+            case 3:printf("è¯·è¾“å…¥éœ€è¦ä¿®æ”¹çš„æ­Œæ›²ï¼ˆåºå·ï¼‰:\n");
                 scanf("%d",&j);
                 h=modify_Node(h,j);
                 paixu(h);
@@ -357,11 +309,11 @@ int main()
                 system("cls");
                 break;
             case 4:system("cls");
-                printf("¸èÇúµ¥ÈçÏÂ:\n");
+                printf("æ­Œæ›²å•å¦‚ä¸‹:\n");
                 print(h);
                 break;
             case 0:return 1;
-            default:printf("\n ÊäÈë´íÎó£¬ÇëÖØĞÂÊäÈë£¡\n");
+            default:printf("\n è¾“å…¥é”™è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥ï¼\n");
         };
     }
     return 0;
