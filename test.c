@@ -11,8 +11,7 @@ int main() {
     s->id=1;
     s->count=1;
     strcpy(s->name,"adf");    //歌名赋值
-    strcpy(s->singer,"adSG");
-    strcpy(s->address,"D:/Code/resource/angel_s_song.mp3");
+    strcpy(s->address,"D:/Music/迷跡波/影色舞.wav");
     player(s);
     return 0;
 }

@@ -1,61 +1,73 @@
 #include <stdio.h>
 #include <windows.h>
 #include <mmsystem.h>
+#include <time.h>
 #include "song.h"
 
 void playermenu(Song *s);
 void playsong(Song *s);
 void playcount(Song *s);
+void prev(Song *s,int m);
+void next(Song *s,int m);
+Song *getRandom(Song *s);
 void player (Song *s)
 {
-	int n,f1,f2;    //f1为文件是否打开，f2为播放是否暂停
+	int f1,f2,m;    //f1为文件是否打开，f2为播放是否暂停
+    char n;
+
     f1=f2=0;
+    m=0;    //播放模式默认为单曲循环
+    srand(time(NULL));
+
 	while(1)
 	{
 		playermenu(s);
-		scanf("%d",&n);
+		scanf(" %c",&n);
 		switch(n)
 		{
-            case 1:
+            case '1':
             {
                 if(f1==0)   //打开文件
                 {
                     playsong(s);
                     f1=1;   //文件已打开
                     f2=1;   //状态为播放
+                    break;
                 }
                 else
                 {
                     if(f2==1)
                     {
                         mciSendString("pause mp3",NULL,0,NULL);
-                        f2=1;   //修改状态为暂停
+                        f2=0;   //修改状态为暂停
+                        break;
                     }
                     else
                     {
                         mciSendString("resume mp3",NULL,0,NULL);
-                        f2=0;   //修改状态为播放
+                        f2=1;   //修改状态为播放
+                        break;
                     }
                 }
-                break;
             }
-            case 2:     //上一首
+            case '2':     //上一首
             {
-                s=s->prev;
-                playsong(s);
+                prev(s,m);
                 break;
             }
-            case 3:     //下一首
+            case '3':     //下一首
             {
-                s=s->next;
-                playsong(s);
+                next(s,m);
                 break;
             }
-            case 4:     //返回歌曲选择
+            case '4':     //返回歌曲选择
             {
                 mciSendString("close mp3",NULL,0,NULL);
                 return;
             }
+            case 's':{m=0;break;}
+            case 'l':{m=1;break;}
+            case 'r':{m=2;break;}
 		}
 	}
 }
@@ -63,11 +75,80 @@ void player (Song *s)
 void playsong(Song *s)
 {
     char command[255];
-    sprintf(command, "open \"%s\" type mpegaudio alias mp3dev", s->address);
-    printf("%s\n", command);
+    sprintf(command, "open \"%s\" alias mp3", s->address);
     mciSendString(command, NULL, 0, NULL);
-    mciSendString("play mp3dev", NULL, 0, NULL);
+    mciSendString("play mp3", NULL, 0, NULL);
 }
+
+void prev(Song *s,int m)
+{
+    switch (m)
+    {
+        case 0:
+        {
+            playsong(s);
+            break;
+        }
+        case 1:
+        {
+            s=s->prev;
+            playsong(s);
+            break;
+        }
+        case 2:
+        {
+            s=getRandom(s);
+            playsong(s);
+            break;
+        }
+    }
+} 
+
+void next(Song *s,int m)
+{
+    switch (m)
+    {
+        case 0:
+        {
+            playsong(s);
+            break;
+        }
+        case 1:
+        {
+            s=s->next;
+            playsong(s);
+            break;
+        }
+        case 2:
+        {
+            s=getRandom(s);
+            playsong(s);
+            break;
+        }
+    }
+}
+
+Song *getRandom(Song *s)
+{
+    int totalSongs=1;    //默认歌曲数为1
+    Song *temp;
+
+    for(temp=s;temp->next!=s;temp=temp->next)
+    {
+        totalSongs ++;
+    }
+
+    int randomnum=rand()%totalSongs+1;
+
+    temp=s;
+    for(int i = 1; i < randomnum; i++)  //找到随机歌曲
+    {
+        temp = temp->next;
+    }
+    return temp;
+}
+
+
 
 void playcount(Song *s)
 {
@@ -115,9 +196,11 @@ void playcount(Song *s)
 void playermenu(Song *s)
 {
 		system("cls");
+        printf("---当前正在播放%s---\n",s->name);
 		printf("1.播放/暂停\n");
 		printf("2.上一首\n");
 		printf("3.下一首\n");
 		printf("4.返回歌曲选择\n");
-		printf("请选择[1-4]>");
+        printf("输入s单曲循环,输入l列表循环,输入r乱序播放\n");
+		printf("请选择[1-4]or[s/l/r]>");
 }
