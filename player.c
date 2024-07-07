@@ -74,7 +74,7 @@ void player (Song *s)
 
 void playsong(Song *s)
 {
-    char command[255];
+    char command[256];
     sprintf(command, "open \"%s\" alias mp3", s->address);
     mciSendString(command, NULL, 0, NULL);
     mciSendString("play mp3", NULL, 0, NULL);
