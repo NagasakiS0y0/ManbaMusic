@@ -1,17 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <windows.h>
 
 void menu1()
 {
-    printf("            manba music\n");
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsole, 0x60);
+    printf("            manba music              \n");
     printf("*************************************\n");
-    printf("            1.音乐库管理\n");
-    printf("            2.播放器\n");
-    printf("            3.歌曲推荐\n");
-    printf("            0.退出\n");
+    printf("            1.音乐库管理             \n");
+    printf("            2.播放器                 \n");
+    printf("            3.歌曲推荐               \n");
+    printf("            0.退出                   \n");
     printf("*************************************\n");
-    printf("请选择：\n");
+    printf("请选择：                             \n");
 }
 void menu_ku()
 {

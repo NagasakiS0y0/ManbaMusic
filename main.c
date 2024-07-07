@@ -4,7 +4,7 @@
 #include <time.h>
 #include "song.h"
 #include "menu.c"
-
+#include "player.c"
 int main()
 {
     menu();
