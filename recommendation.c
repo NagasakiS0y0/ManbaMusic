@@ -11,7 +11,6 @@ struct song *create()
     if (fp==NULL)
     {
         puts("文件打开失败");
-        free(p1);
         exit(0);
     }
     while (fscanf(fp,"%d%d%d%s%s",&p1->num,&p1->id,&p1->count,p1->name,p1->address)!=EOF)
@@ -19,13 +18,12 @@ struct song *create()
         if (head==NULL)
         {
             head=p1;
-            rear=p1;
         }
         else
-        {
+        
             rear->next=p1;
             rear=p1;
-        }
+        
         p1 = (struct song*)malloc(LEN);
     }
      rear->next=NULL;
@@ -70,22 +68,22 @@ void explore(struct song *s)
         {
             if (q->next->count<q->count)
             {
-                // 交换 p 和 q 的 count 值
+            
                 temp.count = q->next->count;
                 q->next->count = q->count;
                 q->count = temp.count;
 
-                // 交换 p 和 q 的 id 值
+     
                 temp.id = q->next->id;
                 q->next->id = q->id;
                 q->id = temp.id;
 
-                // 交换 p 和 q 的 name 值
+               
                 strcpy(temp.name, q->next->name);
                 strcpy(q->next->name, q->name);
                 strcpy(q->name, temp.name);
 
-                // 交换 p 和 q 的 address 值
+      
                 strcpy(temp.address, q->next->address);
                 strcpy(q->next->address, q->address);
                 strcpy(q->address, temp.address);
