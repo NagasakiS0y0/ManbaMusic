@@ -5,14 +5,14 @@
 #include "song.h"
 
 // 函数声明
-Song *createPlaylist(const char *filename);
+Song *createPlaylist(const char *filename,Song *head);
 void displayPlaylist(Song *head);
 void freePlaylist(Song *head);
 void chooseSong(Song *head);
 
 int main() {
     Song *head = NULL;
-    head=createPlaylist("library.txt"); // 创建歌单
+    head=createPlaylist("library.txt",head); // 创建歌单
     displayPlaylist(head); // 显示歌单
 
     // 用户交互
@@ -29,32 +29,44 @@ int main() {
     return 0;
 }
 
-Song *createPlaylist(const char *filename) {
-    FILE *file = fopen(filename, "r");
-    if (file == NULL) {
+Song *createPlaylist(const char *filename, Song *head) 
+{
+    FILE *fp = fopen(filename, "r");
+    if (fp == NULL) {
         perror("无法打开文件");
-        exit(EXIT_FAILURE);
+        return NULL; // 返回NULL表示失败
     }
-    Song *head=NULL;
+
+    Song *rear = head;
     Song *newSong;
-    int data;
-        while (fscanf(file, "%d|%d|%d|%49s|%255s", &newSong->num, &newSong->id, &newSong->count, newSong->name, newSong->address)!=EOF) {
-            // 如果读取的字段数不是5，则到达文件末尾或读取失败
-            if (head == NULL) { // 如果是第一个节点
-                head = newSong;
-                head->next = head;
-                head->prev = head;
-        } else {
-                head->prev->next = newSong;
-                newSong->prev = head->prev;
-                newSong->next = head;
-                head->prev = newSong;
+    newSong = (Song*)malloc(sizeof(Song));
+
+    while (fscanf(fp, "%d|%d|%d|%49s|%255s", &newSong->num, &newSong->id, &newSong->count, newSong->name, newSong->address) == 5) 
+    {
+        if (newSong == NULL) {
+            perror("内存分配失败");
+            fclose(fp);
+            return NULL; // 返回NULL表示失败
         }
-        free(newSong);
-        break;
+
+        if (head == NULL) {
+            head = newSong;
+            newSong->next = newSong;
+            newSong->prev = newSong;
+            rear = newSong;
+        } else {
+            rear = newSong;
+            head->prev = rear;
+            newSong->prev = rear;
+            rear->next = newSong;
+            newSong->next->prev = newSong;
+            rear = newSong;
+        }
+        newSong = (Song*)malloc(sizeof(Song));
     }
+
     printf("歌单创建成功。\n");
-    fclose(file);
+    fclose(fp);
     return head;
 }
 

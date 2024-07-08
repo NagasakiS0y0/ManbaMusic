@@ -203,8 +203,6 @@ Song *getRandom(Song *s)
     return temp;
 }
 
-
-
 /*void playcount(Song *s)
 {
     FILE *fp;
