@@ -41,7 +41,7 @@ void scanAndSaveWavFiles(const char *directoryPath) {
                     // Write to library.txt
                     FILE *fp = fopen("library.txt", "a");
                     if (fp != NULL) {
-                        fprintf(fp, "%d|%d|%d|%s|%s\n", song.num, song.id, song.count, song.name, song.address);
+                        fprintf(fp, "%d %d %d %s %s\n", song.num, song.id, song.count, song.name, song.address);
                         fclose(fp);
                     }
                 }
