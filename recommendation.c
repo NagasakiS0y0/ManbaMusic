@@ -3,7 +3,6 @@
 #include <string.h>
 #include "song.h"
 #define LEN sizeof(struct song)
-
 struct song *create()
 {
     struct song *head=NULL,*p1,*rear=NULL;
@@ -12,6 +11,7 @@ struct song *create()
     if (fp==NULL)
     {
         puts("文件打开失败");
+        free(p1);
         exit(0);
     }
     while (fscanf(fp,"%d:%d:%s:%s",&p1->id,&p1->count,p1->name,p1->address)!=EOF)
@@ -26,51 +26,65 @@ struct song *create()
             rear->next=p1;
             rear=p1;
         }
-        rear=p1;
-        p1=(struct song *)malloc(LEN);
+        p1 = (struct song*)malloc(LEN);
     }
-    rear->next=head;
+     rear->next=head;
     fclose(fp);
     return(head);
 }
 
+
 void recommendation(struct song *s)
 {
-    Song *p,*q;
-    int num,id;
-    char name[50], address[1024];
-    p=s;
-    if (p!=NULL)
+    struct song *p,*q;
+    struct song temp;
+    for (p=s;p->next!=NULL;p=p->next)
+    {   for (q=s; q->next!=NULL;q=q->next)
     {
-        while (1)
-        {
-            q=p->next;
-            while (q!=s)
-            {
                 if (p->count<q->count)
                 {
-                    num=p->num;
-                    p->num=q->num;
-                    q->num=num;
-                    id=p->id;
-                    p->id=q->id;
-                    q->id=id;
-                    strcpy(name, p->name);
-                    strcpy(p->name, q->name);
-                    strcpy(q->name, name);
-                    strcpy(address, p->address);
-                    strcpy(p->address, q->address);
-                    strcpy(q->address, address);
+                temp.count = q->count;
+                q->count = q->next->count;
+                q->next->count = temp.count;
+                temp.id = q->id;
+                q->id = q->next->id;
+                q->next->id = temp.id;
+                strcpy(temp.name , q->name);
+                strcpy(q->name, q->next->name);
+                strcpy(q->next->name, temp.name);
+                strcpy(temp.address , q->address);
+                strcpy(q->address, q->next->address);
+                strcpy(q->next->address, temp.address);
                 }
-                q=q->next;
-            }
-            p=p->next;
-             if (p==s) 
-            {
-                break; 
-            }
         }
-        
     }
+
+}
+
+void print(struct song *s)//打印歌曲单
+{
+    struct song *p;
+    p = s;
+    if (s== NULL)
+    {
+        printf("歌曲单为空。\n");
+        return;
+    }
+    while (p != NULL)
+    {
+        printf("%d %d %s\n", p->id, p->count, p->name);
+        p = p->next;
+    } 
     
+    printf("\n");
+}
+
+int main()
+{
+    struct song *s;
+    s = (struct song *)malloc(LEN);
+    s=create();
+    recommendation(s);
+    print(s);
+    return 0;
 }
