@@ -271,7 +271,7 @@ void playermenu(Song *s,int m)
 ///////////////////////////////////////////////////////////////////////////////////
 
 
-
+/*
 // º¯ÊýÉùÃ÷
 void readSongsFromFile(Song **head);
 void printSongList(Song *head);
@@ -391,3 +391,4 @@ void checkSongList(Song *head)
         current = current->next;
     } while (current != head);
 }
+*/

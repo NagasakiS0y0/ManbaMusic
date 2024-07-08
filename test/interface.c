@@ -90,7 +90,8 @@ void selectSongToPlay(Song *head) {
     }
 }
 
-void addSong(Song **head, Song *newSong) {
+void addSong(Song **head, Song *newSong)
+{
     if (*head == NULL) {
         // 如果链表为空，新节点既是头节点也是尾节点
         *head = newSong;
