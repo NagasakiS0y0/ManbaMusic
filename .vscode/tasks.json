@@ -11,6 +11,7 @@
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe",
                 "-lwinmm", // 添加WinMM库以支持mciSendStringA函数
+                "-lpthread",    // 添加pthread库以支持pthread_create函数
             ],
             "options": {
                 "cwd": "${fileDirname}"
