@@ -50,7 +50,7 @@ int main() {
         }
 
         // 解析一行数据
-        sscanf(buffer, "%*d|%d|%d|%49s|%255s", &songs[numSongs].id, &songs[numSongs].count, songs[numSongs].name, songs[numSongs].address);
+        sscanf(buffer, "%*d%d%d%49s%255s", &songs[numSongs].id, &songs[numSongs].count, songs[numSongs].name, songs[numSongs].address);
         numSongs++;
     }
 

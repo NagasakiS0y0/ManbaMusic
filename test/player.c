@@ -7,11 +7,12 @@
 #include <time.h>
 #include "song.h"
 
-void playermenu(Song *s);
+void checkSongList(Song *head);
+void playermenu(Song *s,int m);
 void playsong(Song *s);
 void playcount(Song *s);
-void prev(Song *s,int m);
-void next(Song *s,int m);
+Song *prev(Song *s,int m);
+Song *next(Song *s,int m);
 //void *printProgress(void *arg);
 int getLength();
 int getPosition();
@@ -21,14 +22,13 @@ void player (Song *s)
 {
 	int f1,f2,m;    //f1为文件是否打开，f2为播放是否暂停
     char n;
-    pthread_t t1;
     f1=f2=0;
-    m=0;    //播放模式默认为单曲循环
+    m=1;    //播放模式默认为列表循环
     srand(time(NULL));
 
 	while(1)
 	{
-		playermenu(s);
+		playermenu(s,m);
 		scanf(" %c",&n);
 		switch(n)
 		{
@@ -59,15 +59,17 @@ void player (Song *s)
             }
             case '2':     //上一首
             {
-                prev(s,m);
+                mciSendString("close mp3",NULL,0,NULL);
+                s=prev(s,m);
                 break;
             }
             case '3':     //下一首
             {
-                next(s,m);
+                mciSendString("close mp3",NULL,0,NULL);
+                s=next(s,m);
                 break;
             }
-            case '4':     //返回歌曲选择
+            case '0':     //返回歌曲选择
             {
                 mciSendString("close mp3",NULL,0,NULL);
                 return;
@@ -128,14 +130,15 @@ int getPosition()
 
 void playsong(Song *s)
 {
+    mciSendString("close mp3",NULL,0,NULL);
     char command[256];
     char length[11];
-    sprintf(command, "open \"%s\" alias mp3", s->address);
+    sprintf(command, "open \"%s\" alias mp3",s->address);
     mciSendString(command, NULL, 0, NULL);
     mciSendString("play mp3", NULL, 0, NULL);
 }
 
-void prev(Song *s,int m)
+Song *prev(Song *s,int m)
 {
     switch (m)
     {
@@ -152,14 +155,14 @@ void prev(Song *s,int m)
         }
         case 2:
         {
-            s=getRandom(s);
+            s = getRandom(s);
             playsong(s);
             break;
         }
     }
-} 
-
-void next(Song *s,int m)
+    return s;
+}
+Song *next(Song *s,int m)
 {
     switch (m)
     {
@@ -171,17 +174,17 @@ void next(Song *s,int m)
         case 1:
         {
             s=s->next;
-            printf("%s",s->name);
             playsong(s);
             break;
         }
         case 2:
         {
-            s=getRandom(s);
+            s = getRandom(s);
             playsong(s);
             break;
         }
     }
+    return s;
 }
 
 Song *getRandom(Song *s)
@@ -247,14 +250,144 @@ Song *getRandom(Song *s)
     }
 }*/
 
-void playermenu(Song *s)
+void playermenu(Song *s,int m)
 {
-		system("cls");
-        printf("当前正在播放%s\n",s->name);
+		//system("cls");
+        switch(m)
+        {
+            case 0:{printf("[单曲循环] ");break;}
+            case 1:{printf("[列表循环] ");break;}
+            case 2:{printf("[随机播放] ");break;}
+        }
+        printf("---当前正在播放%s---\n",s->name);
 		printf("1.播放/暂停\n");
 		printf("2.上一首\n");
 		printf("3.下一首\n");
-		printf("4.返回歌曲选择\n");
+		printf("0.返回歌曲选择\n");
         printf("输入s单曲循环,输入l列表循环,输入r乱序播放\n");
-		printf("请选择[1-4]or[s/l/r]>");
+		printf("请选择[0-3]or[s/l/r]>");
+}
+
+///////////////////////////////////////////////////////////////////////////////////
+
+
+
+// 函数声明
+void readSongsFromFile(Song **head);
+void printSongList(Song *head);
+void selectSongToPlay(Song *head);
+void addSong(Song **head, Song *newSong);
+
+int main() {
+    Song *head = NULL; // 初始化链表头指针
+
+    // 从文件中读取歌曲信息并构建链表
+    readSongsFromFile(&head);
+
+    // 用户选择歌曲进行播放
+    selectSongToPlay(head);
+
+    // 清理链表
+    Song *current = head->next;
+    while (current != head) {
+        Song *next = current->next;
+        free(current);
+        current = next;
+    }
+    free(head);
+
+    return 0;
+}
+
+void readSongsFromFile(Song **head) {
+    FILE *fp;
+    fp = fopen("library.txt", "r");
+    if (fp == NULL) {
+        fprintf(stderr, "无法打开文件\n");
+        return;
+    }
+
+    char buffer[256];
+    while (fgets(buffer, sizeof(buffer), fp)) {
+        Song *newSong = (Song *)malloc(sizeof(Song));
+        if (newSong == NULL) {
+            fprintf(stderr, "内存分配失败\n");
+            return;
+        }
+        sscanf(buffer, "%d %d %d %49s %255s",&newSong->num, &newSong->id, &newSong->count, newSong->name, newSong->address);
+        addSong(head, newSong);
+    }
+    fclose(fp);
+}
+
+void printSongList(Song *head) 
+{
+    Song *current = head;
+    printf("歌曲列表:\n");
+    while (current->prev != head) 
+    {
+        printf("%03d | %s\n", current->num, current->name);
+        current = current->prev;
+    }
+    printf("%03d | %s\n", current->num, current->name);
+}
+
+void selectSongToPlay(Song *head) {
+    int choice;
+    Song *current = head; // 将current初始化为head
+    
+    while (1) { // 使用无限循环，直到用户选择退出
+        printSongList(head);
+        printf("请输入要播放的歌曲编号（输入0退出）: ");
+        scanf("%d", &choice);
+        
+        if (choice == 0) {
+            return; // 用户选择退出
+        }
+        
+        current = head; // 每次循环开始时重置current为head
+        while (current->num != choice) {
+            if (current->next == head) {
+                printf("歌曲编号不存在，请重新输入。\n");
+                break; // 如果到达链表尾部而未找到歌曲，则退出循环
+            }
+            current = current->next;
+        }
+        
+        if (current->num == choice) {
+            player(current); // 找到歌曲，播放
+        }
+    }
+}
+
+void addSong(Song **head, Song *newSong) {
+    if (*head == NULL) {
+        // 如果链表为空，新节点既是头节点也是尾节点
+        *head = newSong;
+        newSong->next = newSong;
+        newSong->prev = newSong;
+    } else {
+        // 链表不为空，将新节点添加到链表末尾
+        Song *last = (*head)->prev;
+        last->next = newSong;
+        newSong->prev = last;
+        newSong->next = *head;
+        (*head)->prev = newSong;
+    }
+}
+
+void checkSongList(Song *head) 
+{
+    if (head == NULL) {
+        printf("链表为空。\n");
+        return;
+    }
+
+    Song *current = head;
+    do {
+        printf("歌曲编号：%d, 歌曲名称：%s, 前驱节点编号：%d, 后继节点编号：%d\n",
+               current->num, current->name,
+               current->prev->num, current->next->num);
+        current = current->next;
+    } while (current != head);
 }

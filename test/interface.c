@@ -64,21 +64,28 @@ void printSongList(Song *head) {
 
 void selectSongToPlay(Song *head) {
     int choice;
-    Song *current = head->next;
-    while (current != head) {
+    Song *current = head; // 将current初始化为head
+    
+    while (1) { // 使用无限循环，直到用户选择退出
         printSongList(head);
         printf("请输入要播放的歌曲编号（输入0退出）: ");
         scanf("%d", &choice);
+        
         if (choice == 0) {
-            return;
+            return; // 用户选择退出
         }
-        while (current != head && current->num != choice) {
+        
+        current = head; // 每次循环开始时重置current为head
+        while (current->num != choice) {
+            if (current->next == head) {
+                printf("歌曲编号不存在，请重新输入。\n");
+                break; // 如果到达链表尾部而未找到歌曲，则退出循环
+            }
             current = current->next;
         }
-        if (current == head) {
-            printf("歌曲编号不存在，请重新输入。\n");
-        } else {
-            player(current);
+        
+        if (current->num == choice) {
+            player(current); // 找到歌曲，播放
         }
     }
 }

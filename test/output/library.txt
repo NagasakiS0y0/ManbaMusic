@@ -1,7 +1,7 @@
 1 8159 0 名無声.wav D:\Music\迷跡波/名無声.wav
 2 2072 0 壱雫空.wav D:\Music\迷跡波/壱雫空.wav
 3 8480 0 影色舞.wav D:\Music\迷跡波/影色舞.wav
-4 2960 0 春日影(MyGO!!!!! ver.).wav D:\Music\迷跡波/春日影(MyGO!!!!! ver.).wav
+4 2960 0 春日影.wav D:\Music\迷跡波/春日影.wav
 5 2676 0 栞.wav D:\Music\迷跡波/栞.wav
 6 2254 0 歌いましょう鳴らしましょう.wav D:\Music\迷跡波/歌いましょう鳴らしましょう.wav
 7 8847 0 潜在表明.wav D:\Music\迷跡波/潜在表明.wav
