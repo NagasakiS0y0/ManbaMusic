@@ -3,7 +3,7 @@
 #include <string.h>
 #include "song.h"
 #define LEN sizeof(struct song)
-void addSong(Song **head, Song *newSong)
+void add(Song **head, Song *newSong)
 {
     if (*head == NULL) {
         // 如果链表为空，新节点既是头节点也是尾节点
@@ -20,7 +20,7 @@ void addSong(Song **head, Song *newSong)
     }
 }
 
-void readSongsFromFile(Song **head) {
+void readFromFile(Song **head) {
     FILE *fp;
     fp = fopen("library.txt", "r");
     if (fp == NULL) {
@@ -37,7 +37,7 @@ void readSongsFromFile(Song **head) {
         }
         sscanf(buffer, "%d%d%d%49s%255s",&newSong->num, &newSong->id, &newSong->count, newSong->name, newSong->address);
 
-        addSong(head, newSong);
+        add(head, newSong);
     }
     fclose(fp);
 
@@ -114,4 +114,3 @@ void print(struct song *s)//打印歌曲单
      printf("%d %d %s\n", p->id, p->count, p->name);
      printf("\n");
 }
-
