@@ -6,26 +6,26 @@
 #include <time.h> 
 #include "createLibrary.c"
 //#include "interface.c"
-#include "song.h"
-void addSong(Song **head, Song *newSong)
+#include "song.h"#include "song.h"
+
+void addList(List **head, List *newList)
 {
     if (*head == NULL) {
-        // 如果链表为空，新节点既是头节点也是尾节点
-        *head = newSong;
-        newSong->next = newSong;
-        newSong->prev = newSong;
+        // 如果链表为空，新节点即是头节点
+        *head = newList;
+        newList->next = NULL;  // 单向链表的尾部next应指向NULL
     } else {
         // 链表不为空，将新节点添加到链表末尾
-        Song *last = (*head)->prev;
-        last->next = newSong;
-        newSong->prev = last;
-        newSong->next = *head;
-        (*head)->prev = newSong;
+        List *last = *head;
+        while (last->next != NULL) {
+            last = last->next;
+        }
+        last->next = newList;
+        newList->next = NULL;  // 新节点是链表的最后一个元素
     }
-}
-void readSongsFromFile(Song **head) {
+}void readListsFromFile(List **head) {
     FILE *fp;
-    fp = fopen("Library/library.txt", "r");
+    fp = fopen("listCatalog.txt", "r");
     if (fp == NULL) {
         fprintf(stderr, "无法打开文件\n");
         return;
@@ -33,31 +33,30 @@ void readSongsFromFile(Song **head) {
 
     char buffer[256];
     while (fgets(buffer, sizeof(buffer), fp)) {
-        Song *newSong = (Song *)malloc(sizeof(Song));
-        if (newSong == NULL) {
+        List *newList = (List *)malloc(sizeof(List));
+        if (newList == NULL) {
             fprintf(stderr, "内存分配失败\n");
             return;
         }
-        sscanf(buffer, "%d %d %d %49s %255s",&newSong->num, &newSong->id, &newSong->count, newSong->name, newSong->address);
-
-        addSong(head, newSong);
+        sscanf(buffer, "%d%49s%255s",&newList->listNum, newList->listName, newList->listAddress);
+       addList(head, newList);
     }
     fclose(fp);
 }
 
-void printSongList(Song *head) {
-    Song *current = head;
-    printf("歌曲列表:\n");
-    while (current->next != head) {
-        printf("%03d | %s\n", current->num, current->name);
+void printList(List *head) {
+    List *current = head;
+    printf("歌单列表:\n");
+    while (current->next != NULL) {
+        printf("%03d | %s\n", current->listNum, current->listName);
         current = current->next;
     }
-    printf("%03d | %s\n", current->num, current->name);
+    printf("%03d | %s\n", current->listNum, current->listName);
 }
 
 int main()
 {
-    Song *h=NULL;
+    List *h=NULL;
     printf("            Manba Music\n");
     printf("*************************************\n");
     printf("                             \n");
@@ -73,9 +72,9 @@ int main()
         createLibrary();
         printf("创建完成！\n");
     }
-    readSongsFromFile(&h);
+    readListsFromFile(&h);
     printf("歌单列表如下:\n");
-    printSongList(h);
+    printList(h);
     getchar();
     free(h);
     return 0;
