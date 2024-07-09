@@ -12,4 +12,11 @@ typedef struct song
 	struct song *next;  // 指向下一个节点
 } Song;
 
+typedef struct list
+{
+    int listNum;
+    char listName[50];
+    struct list *next;
+} List;
+
 #endif // SONG_H
