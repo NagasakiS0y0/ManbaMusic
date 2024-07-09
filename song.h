@@ -16,6 +16,7 @@ typedef struct list
 {
     int listNum;
     char listName[50];
+    char listAddress[256];
     struct list *next;
 } List;
 
