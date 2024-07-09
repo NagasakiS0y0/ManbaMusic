@@ -22,7 +22,7 @@ void addTheSong(Song **head, Song *newSong)
 
 void birthSongsFromFile(Song **head) {
     FILE *fp;
-    fp = fopen("library.txt", "r");
+    fp = fopen("Library/library.txt", "r");
     if (fp == NULL) {
         fprintf(stderr, "无法打开文件\n");
         return;
