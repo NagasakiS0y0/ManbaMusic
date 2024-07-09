@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <conio.h>
 #include <stdlib.h>
 #include <pthread.h>
 #include <unistd.h>
@@ -8,9 +9,10 @@
 #include "song.h"
 
 void checkSongList(Song *head);
-void playermenu(Song *s,int m);
+void playermenu(Song *s,int m,int f2);
 void playsong(Song *s);
 void playcount(Song *s);
+void printSongList(Song *s);
 Song *prev(Song *s,int m);
 Song *next(Song *s,int m);
 //void *printProgress(void *arg);
@@ -28,8 +30,9 @@ void player (Song *s)
 
 	while(1)
 	{
-		playermenu(s,m);
-		scanf(" %c",&n);
+		playermenu(s,m,f2);
+        printf("请选择[0-3]or[s/l/r] >");
+		n=getch();
 		switch(n)
 		{
             case '1':
@@ -61,12 +64,16 @@ void player (Song *s)
             {
                 mciSendString("close mp3",NULL,0,NULL);
                 s=prev(s,m);
+                f1=1;
+                f2=1;
                 break;
             }
             case '3':     //下一首
             {
                 mciSendString("close mp3",NULL,0,NULL);
                 s=next(s,m);
+                f1=1;
+                f2=1;
                 break;
             }
             case '0':     //返回歌曲选择
@@ -125,9 +132,6 @@ int getPosition()
     return NULL;
 }*/
 
-
-
-
 void playsong(Song *s)
 {
     mciSendString("close mp3",NULL,0,NULL);
@@ -136,6 +140,7 @@ void playsong(Song *s)
     sprintf(command, "open \"%s\" alias mp3",s->address);
     mciSendString(command, NULL, 0, NULL);
     mciSendString("play mp3", NULL, 0, NULL);
+    playcount(s);
 }
 
 Song *prev(Song *s,int m)
@@ -162,6 +167,7 @@ Song *prev(Song *s,int m)
     }
     return s;
 }
+
 Song *next(Song *s,int m)
 {
     switch (m)
@@ -207,15 +213,15 @@ Song *getRandom(Song *s)
     return temp;
 }
 
-/*void playcount(Song *s)
+void playcount(Song *s)
 {
     FILE *fp;
     char line[256];
     int found = 0;
 
-    fp = fopen("library.txt", "r+");
+    fp = fopen("Library/library.txt", "r+");
     if (fp == NULL) {
-        printf("Error opening file.\n");
+        printf("Error opening library.txt\n");
         return;
     }
 
@@ -224,21 +230,19 @@ Song *getRandom(Song *s)
         int id;
         int count;
         char name[50];
-        char singer[50];
-        char address[1024];
+        char address[256];
 
         // 解析行中的数据
-        if (sscanf(line, "%d%d%d%49s%49s%1023s", &num,&id,&count,name,singer,address) == 6) {
+        if (sscanf(line, "%d %d %d %49s %255s", &num,&id,&count,name,address)!=EOF) {
             // 如果找到了匹配的ID
             if (id == s->id) {
                 count++; // 增加播放次数
-
-                // 将文件指针移回到行的开始
-                fseek(fp, -strlen(line), SEEK_CUR);
-
-                // 重写这一行
-                fprintf(fp, "%d:%d:%s:%s:%s\n", id, count, name, singer, address);
-
+                if (count%10){
+                    fseek(fp, -strlen(line)-1, SEEK_CUR);   // 将文件指针移回到行的开始(位数未增加)
+                }else{
+                    fseek(fp, -strlen(line)-2, SEEK_CUR);   // 将文件指针移回到行的开始(位数增加)
+                }
+                fprintf(fp, "%d %d %d %s %s\n",num, id, count, name, address);  // 重写这一行
                 found = 1;
                 break; // 找到并修改后退出循环
             }
@@ -248,147 +252,38 @@ Song *getRandom(Song *s)
     if (!found) {
         printf("Song not found in the library.\n");
     }
-}*/
-
-void playermenu(Song *s,int m)
-{
-		//system("cls");
-        switch(m)
-        {
-            case 0:{printf("[单曲循环] ");break;}
-            case 1:{printf("[列表循环] ");break;}
-            case 2:{printf("[随机播放] ");break;}
-        }
-        printf("---当前正在播放%s---\n",s->name);
-		printf("1.播放/暂停\n");
-		printf("2.上一首\n");
-		printf("3.下一首\n");
-		printf("0.返回歌曲选择\n");
-        printf("输入s单曲循环,输入l列表循环,输入r乱序播放\n");
-		printf("请选择[0-3]or[s/l/r]>");
 }
 
-///////////////////////////////////////////////////////////////////////////////////
-
-
-/*
-// 函数声明
-void readSongsFromFile(Song **head);
-void printSongList(Song *head);
-void selectSongToPlay(Song *head);
-void addSong(Song **head, Song *newSong);
-
-int main() {
-    Song *head = NULL; // 初始化链表头指针
-
-    // 从文件中读取歌曲信息并构建链表
-    readSongsFromFile(&head);
-
-    // 用户选择歌曲进行播放
-    selectSongToPlay(head);
-
-    // 清理链表
-    Song *current = head->next;
-    while (current != head) {
-        Song *next = current->next;
-        free(current);
-        current = next;
-    }
-    free(head);
-
-    return 0;
-}
-
-void readSongsFromFile(Song **head) {
-    FILE *fp;
-    fp = fopen("library.txt", "r");
-    if (fp == NULL) {
-        fprintf(stderr, "无法打开文件\n");
-        return;
-    }
-
-    char buffer[256];
-    while (fgets(buffer, sizeof(buffer), fp)) {
-        Song *newSong = (Song *)malloc(sizeof(Song));
-        if (newSong == NULL) {
-            fprintf(stderr, "内存分配失败\n");
-            return;
-        }
-        sscanf(buffer, "%d %d %d %49s %255s",&newSong->num, &newSong->id, &newSong->count, newSong->name, newSong->address);
-        addSong(head, newSong);
-    }
-    fclose(fp);
-}
-
-void printSongList(Song *head) 
-{
-    Song *current = head;
-    printf("歌曲列表:\n");
-    while (current->prev != head) 
-    {
+void printSongList(Song *s) {
+    Song *current = s;
+    while (current->next != s) {
         printf("%03d | %s\n", current->num, current->name);
-        current = current->prev;
-    }
-    printf("%03d | %s\n", current->num, current->name);
-}
-
-void selectSongToPlay(Song *head) {
-    int choice;
-    Song *current = head; // 将current初始化为head
-    
-    while (1) { // 使用无限循环，直到用户选择退出
-        printSongList(head);
-        printf("请输入要播放的歌曲编号（输入0退出）: ");
-        scanf("%d", &choice);
-        
-        if (choice == 0) {
-            return; // 用户选择退出
-        }
-        
-        current = head; // 每次循环开始时重置current为head
-        while (current->num != choice) {
-            if (current->next == head) {
-                printf("歌曲编号不存在，请重新输入。\n");
-                break; // 如果到达链表尾部而未找到歌曲，则退出循环
-            }
-            current = current->next;
-        }
-        
-        if (current->num == choice) {
-            player(current); // 找到歌曲，播放
-        }
-    }
-}
-
-void addSong(Song **head, Song *newSong) {
-    if (*head == NULL) {
-        // 如果链表为空，新节点既是头节点也是尾节点
-        *head = newSong;
-        newSong->next = newSong;
-        newSong->prev = newSong;
-    } else {
-        // 链表不为空，将新节点添加到链表末尾
-        Song *last = (*head)->prev;
-        last->next = newSong;
-        newSong->prev = last;
-        newSong->next = *head;
-        (*head)->prev = newSong;
-    }
-}
-
-void checkSongList(Song *head) 
-{
-    if (head == NULL) {
-        printf("链表为空。\n");
-        return;
-    }
-
-    Song *current = head;
-    do {
-        printf("歌曲编号：%d, 歌曲名称：%s, 前驱节点编号：%d, 后继节点编号：%d\n",
-               current->num, current->name,
-               current->prev->num, current->next->num);
         current = current->next;
-    } while (current != head);
+    }
+    printf("%03d | %s\n\n", current->num, current->name);
 }
-*/
+
+void playermenu(Song *s,int m,int f2)
+{
+	system("cls");
+    printSongList(s);
+    switch(m)
+    {
+        case 0:{printf("[单曲循环] ");break;}
+        case 1:{printf("[列表循环] ");break;}
+        case 2:{printf("[随机播放] ");break;}
+    }
+    printf("当前曲目");
+    if(f2==0)
+    {
+        printf(" [|>] %s\n",s->name);
+    }
+    else
+    { 
+        printf(" [||] %s\n",s->name);
+    }
+	printf("%-20s%-20s\n", "1.播放/暂停", "2.上一首");
+    printf("%-20s%-20s\n", "3.下一首", "0.返回歌曲选择");
+    printf("输入[s]单曲循环,输入[l]列表循环,输入[r]乱序播放\n");
+    printf("***********************************************************\n");
+}

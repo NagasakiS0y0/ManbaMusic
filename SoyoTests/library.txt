@@ -1,0 +1,13 @@
+1 8006 0 名無声.wav D:\Music\迷跡波/名無声.wav
+2 4137 0 壱雫空.wav D:\Music\迷跡波/壱雫空.wav
+3 9477 0 影色舞.wav D:\Music\迷跡波/影色舞.wav
+4 5643 0 春日影.wav D:\Music\迷跡波/春日影.wav
+5 9660 0 栞.wav D:\Music\迷跡波/栞.wav
+6 8305 0 歌いましょう鳴らしましょう.wav D:\Music\迷跡波/歌いましょう鳴らしましょう.wav
+7 5640 0 潜在表明.wav D:\Music\迷跡波/潜在表明.wav
+8 6196 0 無路矢.wav D:\Music\迷跡波/無路矢.wav
+9 5869 0 碧天伴走.wav D:\Music\迷跡波/碧天伴走.wav
+10 9199 0 詩超絆.wav D:\Music\迷跡波/詩超絆.wav
+11 6744 0 迷星叫.wav D:\Music\迷跡波/迷星叫.wav
+12 5010 0 迷路日々.wav D:\Music\迷跡波/迷路日々.wav
+13 7860 0 音一会.wav D:\Music\迷跡波/音一会.wav

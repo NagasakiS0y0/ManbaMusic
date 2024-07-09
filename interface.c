@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <windows.h>
+#include <conio.h>
 #include "song.h"
 #include "player.c"
 #define LEN sizeof(Song)    //歌单结构体长度
@@ -18,39 +19,40 @@ void renamePlaylist(Song *head,List **l);
 void readSongsFromFile(Song **head,List *l);
 void savePlaylistToFile(Song *head,List *l);
 
-void listMain(List *l) {
+void listMain(List *l) 
+{
     Song *head = NULL; // 初始化链表头指针
 
     readSongsFromFile(&head,l);   // 从文件中读取歌曲信息并构建链表
 
-    int choice;
+    char choice;
     while(1) 
     {
         system("cls");
-        printf("当前歌单->%s\n",l->listName);
+        printf("[当前歌单]> [%s]\n\n",l->listName);
         printSongList(head);
-        printf("请选择操作:\n");
-        printf("1. 播放音乐\n");
-        printf("2. 增加歌曲\n");
-        printf("3. 删除歌曲\n");
-        printf("4. 重命名歌单\n");
-        printf("0. 退出\n");
-        scanf("%d", &choice);
-
+        printf("*********************************\n");
+        printf("   1. 播放音乐    2. 增加歌曲\n");
+        printf("   3. 删除歌曲    4. 重命名歌单\n");
+        printf("   0. 退出\n");
+        printf("*********************************\n");
+        printf("请选择功能：[0-4] > ");
+        
+        choice=getch();
         switch (choice) {
-            case 1:
+            case '1':
                 selectSongToPlay(head);
                 break;
-            case 2:
+            case '2':
                 addSong(&head,l);
                 break;
-            case 3:
+            case '3':
                 deleteSong(&head,l);
                 break;
-            case 4:
+            case '4':
                 renamePlaylist(head,&l);
                 break;
-            case 0:
+            case '0':
                 Song *current = head->next;
                 while (current != head) 
                 {
@@ -110,7 +112,7 @@ void selectSongToPlay(Song *head) {
     while (1) { // 使用无限循环，直到用户选择退出
         system("cls");
         printSongList(head);
-        printf("请输入要播放的歌曲编号（输入0退出）: ");
+        printf("请输入要播放的歌曲编号（输入0退出）> ");
         scanf("%d", &choice);
         
         if (choice == 0) {
@@ -246,11 +248,12 @@ Song *addSongFromLib()
     while(1)//功能选择菜单
     {
         system("cls");
-        printf("--------曲库--------\n");
+        printf("***************曲库***************\n");
         libPrint(h);//输出歌单
-        printf("*    1. 搜索序号添加\n");
-        printf("*    2. 搜索歌名添加\n");
-        printf("*    0. 返回上级\n");
+        printf("*********************************\n");
+        printf("1. 搜索序号添加     2. 搜索歌名添加\n");
+        printf("0. 返回上级\n");
+        printf("*********************************\n");
         printf("请选择功能：[0-2] > ");
         scanf("%d",&n);
         switch (n)
@@ -318,18 +321,21 @@ void deleteSong(Song **head,List *l)    // 删除歌曲
     Song *prev = NULL;
     do {
         if (current->num == choice) {
-            if (prev) {
+            if (current == *head) {
+                // 如果删除的是头节点
+                *head = current->next;
+                if (*head) {
+                    // 更新新头节点的prev指针
+                    (*head)->prev = current->prev;
+                    // 更新链表最后一个节点的next指针
+                    current->prev->next = *head;
+                }
+            } else {
+                // 如果删除的不是头节点
                 prev->next = current->next;
                 if (current->next) {
                     current->next->prev = prev;
                 }
-            } else {
-                // 如果删除的是头节点
-                Song *newHead = current->next;
-                if (newHead) {
-                    newHead->prev = NULL;
-                }
-                *head = newHead;
             }
             free(current);
             break;
@@ -342,6 +348,7 @@ void deleteSong(Song **head,List *l)    // 删除歌曲
         printf("歌曲编号不存在。\n");
     }
     savePlaylistToFile(*head,l);
+    renumberSongs(head); // 在这里调用renumberSongs函数
 }
 
 void savePlaylistToFile(Song *head,List *l)     // 将歌单保存到文件
