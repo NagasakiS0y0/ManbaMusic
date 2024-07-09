@@ -31,7 +31,8 @@ void menu_re(Song *s)
         player (s);
         break;
     case 2:
-       
+        explore(s);
+        player (s);
         break;
     default:
         break;
