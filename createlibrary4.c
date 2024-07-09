@@ -37,7 +37,7 @@ void scanAndSaveWavFiles(const char *directoryPath)
         return;
     }
         FILE *fp1;
-        fp1=fopen("library.txt","w");
+        fp1=fopen("Library/library.txt","w");
         do 
         {
             char *dotPos = strrchr(Data.cFileName, '.');// 找到文件名的后缀位置
@@ -73,7 +73,7 @@ void scanAndSaveMP3Files(const char *directoryPath)
         return;
     }
         FILE *fp1;
-        fp1=fopen("library.txt","a");
+        fp1=fopen("Library/library.txt","a");
         do 
         {
             char *dotPos = strrchr(Data.cFileName, '.');// 找到文件名的后缀位置
@@ -97,14 +97,14 @@ void tihuan()
     char ch;
 
     // 打开文件用于读取
-    fp1 = fopen("library.txt", "r");
+    fp1 = fopen("Library/library.txt", "r");
     if (fp1 == NULL) {
         printf("无法打开文件 %s\n", "library.txt");
         return;
     }
 
     // 创建临时文件用于写入
-    fp2 = fopen("temp.txt", "w");
+    fp2 = fopen("Library/temp.txt", "w");
     if (fp2 == NULL) 
     {
         printf("无法创建临时文件\n");
@@ -122,8 +122,8 @@ void tihuan()
     }
     fclose(fp1);
     fclose(fp2);
-    remove("library.txt");
-    rename("temp.txt", "library.txt");
+    remove("Library/library.txt");
+    rename("Library/temp.txt", "Library/library.txt");
 }
 
 void createLibrary() 
@@ -144,9 +144,3 @@ void createLibrary()
     printf("扫描完成，信息已保存到library.txt。\n");
 }
 
-int main() 
-{
-    createLibrary();
-    tihuan();
-    return 0;
-}
