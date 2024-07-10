@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <windows.h>
-#include <time.h> // For time and rand functions
+#include <time.h> 
 #include "song.h"
 void scanAndSaveWavFiles(const char *directoryPath);
 void scanAndSaveMP3Files(const char *directoryPath);
@@ -11,13 +11,12 @@ char a[1024];
 int num,id;
 
 int generateRandomID() {
-    // Seed the random number generator
     static int seeded = 0;
     if (!seeded) {
         srand(time(NULL));
         seeded = 1;
     }
-    return rand() % 9000 + 1000; // Generates a 4-digit number between 1000 and 9999
+    return rand() % 9000 + 1000; 
 }
 
 void scanAndSaveWavFiles(const char *directoryPath) 
@@ -28,7 +27,7 @@ void scanAndSaveWavFiles(const char *directoryPath)
     int count=0;
     int num1=1;
     char Path[1024];// 定义一个字符串数组，用于存储搜索路径
-    snprintf(Path, sizeof(Path), "%s\\*.wav", directoryPath);// 将 \*.mp3 附加到文件夹路径后面
+    snprintf(Path, sizeof(Path), "%s\\*.wav", directoryPath);// 将 \*.wav 附加到文件夹路径后面
     printf("正在搜索wav文件\n");
     hFind = FindFirstFile(Path, &Data);
     if (hFind == INVALID_HANDLE_VALUE)// 如果找不到文件，则返回
