@@ -6,21 +6,20 @@
 #include "song.h"
 #include "player.c"
 
-// 函数声明
-Song *addSongFromLib();
-void printSongList(Song *head);
-void renumberSongs(Song **head);
-void selectSongToPlay(Song *head);
-void addSong(Song **head, List *l);
-void deleteSong(Song **head,List *l);
-void addNode(Song **head, Song *newSong);
-void renamePlaylist(Song *head,List **l);
-void readSongsFromFile(Song **head,List *l);
-void savePlaylistToFile(Song *head,List *l);
+Song *addSongFromLib();     //从曲库读取歌曲信息
+void printSongList(Song *head);     //输出歌单
+void renumberSongs(Song **head);    //重新编号
+void selectSongToPlay(Song *head);      //选择歌曲
+void addSong(Song **head, List *l);     //添加歌曲
+void deleteSong(Song **head,List *l);       //删除歌曲
+void addNode(Song **head, Song *newSong);       //添加节点
+void renamePlaylist(Song *head,List **l);       //重命名歌单
+void readSongsFromFile(Song **head,List *l);    //从文件读取歌曲信息
+void savePlaylistToFile(Song *head,List *l);    //保存歌单到文件
 
-void listMain(List *l) 
+void listMain(List *l)      //歌单内部操作，接受指向歌单的指针，可调用
 {
-    Song *head = NULL; // 初始化链表头指针
+    Song *head = NULL;
     Song *current;
     readSongsFromFile(&head,l);   // 从文件中读取歌曲信息并构建链表
 
@@ -73,16 +72,6 @@ void listMain(List *l)
     return;
 }
 
-/*int main()
-{
-    List *l = (List*)malloc(sizeof(List));
-    l->listNum=1;   //序号赋值
-    strcpy(l->listName,"123");    //歌名赋值
-    strcpy(l->listAddress,"List/123.txt");
-    listMain(l);
-    return 0;
-}*/
-
 void readSongsFromFile(Song **head,List *l) {
     FILE *fp;
     fp = fopen(l->listAddress, "r");
@@ -106,34 +95,29 @@ void readSongsFromFile(Song **head,List *l) {
 
 void selectSongToPlay(Song *head) {
     int choice;
-    Song *current = head; // 将current初始化为head
+    Song *current = head;
     
-    while (1) { // 使用无限循环，直到用户选择退出
+    while (1) {
         system("cls");
         printSongList(head);
-        printf("请输入要播放的歌曲编号（输入0退出）> ");
-        scanf("%d", &choice);
-        
-        if (choice == 0) {
-            return; // 用户选择退出
-        }
-        
-        current = head; // 每次循环开始时重置current为head
+        printf("请输入要播放的歌曲编号（输入0返回）> ");
+        scanf("%d",&choice);
+        current = head;
         while (current->num != choice) {
             if (current->next == head) {
-                printf("歌曲编号不存在，请重新输入。\n");
-                break; // 如果到达链表尾部而未找到歌曲，则退出循环
+                MessageBox(NULL, "歌曲序号不存在，请重新输入！","错误！", MB_OK);
+                break; //未找到歌曲，退出
             }
             current = current->next;
         }
         
         if (current->num == choice) {
-            player(current); // 找到歌曲，播放
+            player(current);
         }
     }
 }
 
-void addNode(Song **head, Song *newSong)
+void addNode(Song **head, Song *newSong)    //添加节点
 {
     if (*head == NULL) {
         // 如果链表为空，新节点既是头节点也是尾节点
@@ -150,7 +134,7 @@ void addNode(Song **head, Song *newSong)
     }
 }
 
-void renamePlaylist(Song *head,List **l)
+void renamePlaylist(Song *head,List **l)    //重命名歌单
 {
     char newName[50];
     char cache[256];
@@ -170,7 +154,7 @@ void renamePlaylist(Song *head,List **l)
     strcpy((*l)->listAddress, folder);
 }
 
-void addSong(Song **head, List *l)
+void addSong(Song **head, List *l)  // 添加歌曲到歌单
 {
     Song *newSong = addSongFromLib(); // 获取要添加的歌曲指针
     if (newSong != NULL) {
@@ -179,7 +163,7 @@ void addSong(Song **head, List *l)
         do {
             if (current && current->id == newSong->id) {
                 MessageBox(NULL, "歌曲已经存在于歌单中。","错误！", MB_OK);
-                free(newSong); // 释放新歌曲的内存
+                free(newSong);
                 return;
             }
             current = current->next;
@@ -191,7 +175,7 @@ void addSong(Song **head, List *l)
     }
 }
 
-void libPrint(Song *libHead)//输出歌单
+void libPrint(Song *libHead)    //输出歌单
 {
     Song *p;
     p=libHead;
@@ -203,61 +187,64 @@ void libPrint(Song *libHead)//输出歌单
     printf("\n");
 }
 
-Song *createFromLib()//    读取文件
+Song *createFromLib()   //读取文件
 {
     Song *libHead=NULL,*p1,*libRear=NULL;//歌单头指针、局部指针、歌单尾指针
     FILE *fp1;
     fp1=fopen("Library/library.txt","r");
     if(fp1==NULL)
     {
-        printf("曲库文件丢失!\n");
+        MessageBox(NULL, "曲库文件丢失！","错误！", MB_OK);
         return NULL;
     }
 
     p1=(Song*)malloc(LEN);//创建新节点
 
     if(p1==NULL){
-        printf("内存分配错误！\n");
+        MessageBox(NULL, "内存分配错误！","错误！", MB_OK);
         exit(1);
     }
-    while(fscanf(fp1,"%d%d%d%s%s",&p1->num,&p1->id,&p1->count,p1->name,p1->address)!=EOF)//读取文件并判断读取是否结束
+    while(fscanf(fp1,"%d%d%d%s%s",&p1->num,&p1->id,&p1->count,p1->name,p1->address)!=EOF)
     {
-        if(libHead==NULL){//歌单为空
-            libHead=p1;//歌单头指针指向新节点
-        }else{
-            libRear->next=p1;//歌单尾指针指向新节点
+        if(libHead==NULL)
+        {
+            libHead=p1;
+        }else
+        {
+            libRear->next=p1;
         }
         libRear=p1;
-        p1=(Song*)malloc(LEN);//创建新节点
+        p1=(Song*)malloc(LEN);
     }
-    libRear->next=NULL;//歌单尾指针指向NULL
+    libRear->next=NULL;
     fclose(fp1);
     return(libHead);//返回歌单头指针
 }
 
-Song *addSongFromLib()
+Song *addSongFromLib()  //从曲库添加歌曲
 {
     void libPrint(Song *libHead);
     Song *createFromLib();
 
-    int n,m;//功能选择菜单的判断变量
+    int m;    //功能选择菜单的判断变量
+    char n;
     int length=0;
     int found;
-    char y[20];//歌曲名字
+    char y[20];     //歌曲名字
     Song *p;
-    Song *h;//歌单头指针
-    h=createFromLib();//创建歌单
-    while(1)//功能选择菜单
+    Song *h;    //歌单头指针
+    h=createFromLib();      //创建歌单
+    while(1)    //功能选择菜单
     {
         system("cls");
         printf("***************曲库***************\n");
-        libPrint(h);//输出歌单
+        libPrint(h);    //输出歌单
         printf("*********************************\n");
         printf("1. 搜索序号添加     2. 搜索歌名添加\n");
         printf("0. 返回上级\n");
         printf("*********************************\n");
         printf("请选择功能：[0-2] > ");
-        scanf("%d",&n);
+        n=getch();
         switch (n)
         {
         case 0:
@@ -324,16 +311,12 @@ void deleteSong(Song **head,List *l)    // 删除歌曲
     do {
         if (current->num == choice) {
             if (current == *head) {
-                // 如果删除的是头节点
                 *head = current->next;
                 if (*head) {
-                    // 更新新头节点的prev指针
                     (*head)->prev = current->prev;
-                    // 更新链表最后一个节点的next指针
                     current->prev->next = *head;
                 }
             } else {
-                // 如果删除的不是头节点
                 prev->next = current->next;
                 if (current->next) {
                     current->next->prev = prev;
@@ -350,7 +333,7 @@ void deleteSong(Song **head,List *l)    // 删除歌曲
         printf("歌曲编号不存在。\n");
     }
     savePlaylistToFile(*head,l);
-    renumberSongs(head); // 在这里调用renumberSongs函数
+    renumberSongs(head); // 重编号
 }
 
 void savePlaylistToFile(Song *head,List *l)     // 将歌单保存到文件
@@ -359,7 +342,7 @@ void savePlaylistToFile(Song *head,List *l)     // 将歌单保存到文件
 
     FILE *fp = fopen(l->listAddress, "w");
     if (!fp) {
-        fprintf(stderr, "无法打开文件\n");
+        MessageBox(NULL, "无法打开文件！","错误！", MB_OK);
         return;
     }
 
@@ -376,12 +359,10 @@ void renumberSongs(Song **head) {
     int number = 1;
     Song *current = *head;
 
-    // 如果链表为空或只有一个元素，无需重编号
     if (*head == NULL || (*head)->next == *head) {
         return;
     }
-
-    // 遍历链表，重新设置歌曲编号
+    //重新编号
     do {
         current->num = number++;
         current = current->next;

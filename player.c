@@ -8,19 +8,16 @@
 #include <time.h>
 #include "song.h"
 
-void checkSongList(Song *head);
-void playermenu(Song *s,int m,int f2);
-void playsong(Song *s);
-void playcount(Song *s);
-void printSongList(Song *s);
-Song *prev(Song *s,int m);
-Song *next(Song *s,int m);
-//void *printProgress(void *arg);
-int getLength123();
-int getPosition();
-Song *getRandom(Song *s);
+void checkSongList(Song *head);     //检查歌曲列表
+void playermenu(Song *s,int m,int f2);      //播放界面
+void playsong(Song *s);     //播放歌曲
+void playcount(Song *s);    //播放次数+1
+void printSongList(Song *s);    //打印歌曲列表
+Song *prev(Song *s,int m);    //上一首
+Song *next(Song *s,int m);    //下一首
+Song *getRandom(Song *s);    //随机播放
 
-void player (Song *s)
+void player (Song *s)     //播放歌曲功能，接受指向歌曲的指针，可调用
 {
 	int f1,f2,m;    //f1为文件是否打开，f2为播放是否暂停
     char n;
@@ -83,73 +80,30 @@ void player (Song *s)
                 mciSendString("close mp3",NULL,0,NULL);
                 return;
             }
-            case 's':{m=0;break;}
-            case 'l':{m=1;break;}
-            case 'r':{m=2;break;}
+            case 's':{m=0;break;}   //单曲循环
+            case 'l':{m=1;break;}   //列表循环
+            case 'r':{m=2;break;}   //随机播放
 		}
 	}
 }
 
-int getLength123()
+
+void playsong(Song *s)      //播放歌曲
 {
-    char length[11];
-    mciSendString("status mp3 length", length, 10, NULL);
-    return atoi(length);
-}
-
-int getPosition()
-{
-    char position[11];
-    mciSendString("status mp3 position", position, 10, NULL);
-    return atoi(position);
-}
-
-/*void *printProgress(void *args)
-{
-    while(1)
-    {
-        printf("\r");
-        int length = getLength123();
-        int position = getPosition();
-        int MinTens_cur = 0, MinOnes_cur = 0, SecTens_cur = 0, SecOnes_cur = 0;
-        int MinTens_total = 0, MinOnes_total = 0, SecTens_total = 0, SecOnes_total = 0;
-
-        // 计算总时间（分钟和秒）
-        MinTens_total = length / 60000;     
-        MinOnes_total = (length / 1000) % 60 / 10;
-        SecTens_total = ((length / 1000) % 60) / 10;
-        SecOnes_total = ((length / 1000) % 60) % 10;
-
-        // 计算当前时间（分钟和秒）
-        MinTens_cur = position / 60000;
-        MinOnes_cur = (position / 1000) % 60 / 10;
-        SecTens_cur = ((position / 1000) % 60) / 10;
-        SecOnes_cur = ((position / 1000) % 60) % 10;
-
-        // 显示格式化的时间
-        pintf("当前正在播放");
-        printf("[%02d:%02d/%02d:%02d]", MinTens_cur, SecTens_cur*10 + SecOnes_cur, MinTens_total, SecTens_total*10 + SecOnes_total);
-        sleep(1);
-    }
-    return NULL;
-}*/
-
-void playsong(Song *s)
-{
-    mciSendString("close mp3",NULL,0,NULL);
+    mciSendString("close mp3",NULL,0,NULL);     //先确认关闭文件
     char command[256];
     char length[11];
-    sprintf(command, "open \"%s\" alias mp3",s->address);
-    mciSendString(command, NULL, 0, NULL);
-    mciSendString("play mp3", NULL, 0, NULL);
+    sprintf(command, "open \"%s\" alias mp3",s->address);   
+    mciSendString(command, NULL, 0, NULL);      //打开文件
+    mciSendString("play mp3", NULL, 0, NULL);       //播放文件
     playcount(s);
 }
 
-Song *prev(Song *s,int m)
+Song *prev(Song *s,int m)   //上一首
 {
     switch (m)
     {
-        case 0:
+        case 0:     
         {
             playsong(s);
             break;
@@ -170,7 +124,7 @@ Song *prev(Song *s,int m)
     return s;
 }
 
-Song *next(Song *s,int m)
+Song *next(Song *s,int m)   //下一首
 {
     switch (m)
     {
@@ -195,7 +149,7 @@ Song *next(Song *s,int m)
     return s;
 }
 
-Song *getRandom(Song *s)
+Song *getRandom(Song *s)    //随机播放
 {
     int totalSongs=1;    //默认歌曲数为1
     Song *temp;
@@ -203,7 +157,7 @@ Song *getRandom(Song *s)
     for(temp=s;temp->next!=s;temp=temp->next)
     {
         totalSongs ++;
-    }
+    }   //计算歌曲总数
 
     int randomnum=rand()%totalSongs+1;
 
@@ -215,7 +169,7 @@ Song *getRandom(Song *s)
     return temp;
 }
 
-void playcount(Song *s)
+void playcount(Song *s)     //播放次数+1
 {
     FILE *fp;
     char line[256];
@@ -244,13 +198,16 @@ void playcount(Song *s)
         char name[50];
         char address[256];
 
-        if (sscanf(line, "%d %d %d %49s %255s", &num, &id, &count, name, address) == 5) {
-            if (id == s->id) {
+        if (sscanf(line, "%d %d %d %49s %255s", &num, &id, &count, name, address) !=EOF) 
+        {
+            if (id == s->id) 
+            {
                 count++; // 增加播放次数
                 // 写入临时文件
                 fprintf(tempFp, "%d %d %d %s %s\n", num, id, count, name, address);
                 found = 1;
-            } else {
+            } else 
+            {
                 // 如果不是目标歌曲，直接复制到临时文件
                 fputs(line, tempFp);
             }
@@ -260,16 +217,19 @@ void playcount(Song *s)
     fclose(fp);
     fclose(tempFp);
 
-    if (!found) {
+    if (!found) 
+    {
         printf("Song not found in the library.\n");
-    } else {
+    } else 
+    {
         // 替换原文件
         remove("Library/library.txt");
         rename(tempFile, "Library/library.txt");
     }
 }
 
-void printSongList(Song *s) {
+void printSongList(Song *s)     //打印歌曲列表
+{
     Song *current = s;
     while (current->next != s) {
         printf("%03d |%s\n", current->num, current->name);
@@ -278,7 +238,7 @@ void printSongList(Song *s) {
     printf("%03d |%s\n\n", current->num,current->name);
 }
 
-void playermenu(Song *s,int m,int f2)
+void playermenu(Song *s,int m,int f2)       //播放界面
 {
 	
     switch(m)
