@@ -110,6 +110,10 @@ int main()
     
     while (1)
     {
+        mciSendString("open \"resource/ManbaOut.mp3\" alias mp3", NULL, 0, NULL);
+        mciSendString("play mp3", NULL, 0, NULL);
+        Sleep(6000);
+        mciSendString("close mp3", NULL, 0, NULL);
         system("cls");
         printf("            Manba Music\n");
         printf("*************************************\n");
