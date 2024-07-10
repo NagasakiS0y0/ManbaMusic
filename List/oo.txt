@@ -1,4 +1,0 @@
-1 5153 01_レイルロマネスク D:/code/7/output/01_レイルロマネスク.wav
-2 5154 02_SilentRail D:/code/7/output/02_SilentRail.wav
-3 5155 03_pictorial D:/code/7/output/03_pictorial.wav
-4 5166 see_you_again D:/code/7/output/see_you_again.mp3
