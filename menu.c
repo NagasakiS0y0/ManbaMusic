@@ -11,7 +11,83 @@
 #include "explore_re2.c"
 #include "song.h"
 
+void printSongListforExplore(Song *s) {
+    Song *current = s;
+    while (current->next != s) {
+        printf("%03d|%d| %s\n", current->num,current->count, current->name);
+        current = current->next;
+    }
+    printf("%03d|%d|%s\n\n", current->num,current->count, current->name);
+}
+void playerforExplore (Song *s)
+{
+	int f1,f2,m;    //f1为文件是否打开，f2为播放是否暂停
+    char n;
+    f1=f2=0;
+    m=1;    //播放模式默认为列表循环
+    srand(time(NULL));
 
+	while(1)
+	{
+        system("cls");
+        printSongListforExplore(s);
+		playermenu(s,m,f2);
+        printf("请选择[0-3]or[s/l/r] >");
+		n=getch();
+		switch(n)
+		{
+            case '1':
+            {
+                if(f1==0)   //打开文件
+                {
+                    playsong(s);
+                    f1=1;   //文件已打开
+                    f2=1;   //状态为播放
+                    break;
+                }
+                else
+                {
+                    if(f2==1)
+                    {
+                        mciSendString("pause mp3",NULL,0,NULL);
+                        f2=0;   //修改状态为暂停
+                        break;
+                    }
+                    else
+                    {
+                        mciSendString("resume mp3",NULL,0,NULL);
+                        f2=1;   //修改状态为播放
+                        break;
+                    }
+                }
+            }
+            case '2':     //上一首
+            {
+                mciSendString("close mp3",NULL,0,NULL);
+                s=prev(s,m);
+                f1=1;
+                f2=1;
+                break;
+            }
+            case '3':     //下一首
+            {
+                mciSendString("close mp3",NULL,0,NULL);
+                s=next(s,m);
+                f1=1;
+                f2=1;
+                break;
+            }
+            case '0':     //返回歌曲选择
+            {
+                mciSendString("close mp3",NULL,0,NULL);
+                return;
+            }
+            case 's':{m=0;break;}
+            case 'l':{m=1;break;}
+            case 'r':{m=2;break;}
+		}
+	}
+}
 void menu_manba()
 {
     printf("正在读取音乐库文件。\n");
@@ -22,7 +98,7 @@ void menu_manba()
     
     while(*s!='\0')
     {
-        Sleep(200);
+        Sleep(150);
         printf("%c",*s);
         s++;
     }
@@ -101,11 +177,11 @@ void menu_re(Song *s)
         {
         case 1:
             recommendation(s);
-            player (s);
+            playerforExplore (s);
             break;
         case 2:
             explore(s);
-            player (s);
+            playerforExplore (s);
             break;
         case 0:
             return;
@@ -119,6 +195,7 @@ void menu_re(Song *s)
 
 int main()
 {
+    menu_manba();
     int i=0;
     List *catalog=NULL;
     Song *s=NULL;
@@ -136,7 +213,7 @@ int main()
     
     while (1)
     {
-        menu_manba();
+        
         system("cls");
         printf("            Manba Music\n");
         printf("*************************************\n");
