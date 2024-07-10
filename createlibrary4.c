@@ -37,7 +37,9 @@ void scanAndSaveWavFiles(const char *directoryPath)
         return;
     }
         FILE *fp1;
+        FILE *fp2;
         fp1=fopen("Library/library.txt","w");
+        fp2=fopen("List/library.txt","w");
         do 
         {
             char *dotPos = strrchr(Data.cFileName, '.');// 找到文件名的后缀位置
@@ -46,13 +48,16 @@ void scanAndSaveWavFiles(const char *directoryPath)
                 *dotPos = '\0';// 将点号替换为空字符
             }
             printf("找到wav文件: %s.wav\n", Data.cFileName);
-            fprintf(fp1, "%d %d %d %s %s/%s.wav\n",num1++ , id1++, count, Data.cFileName, directoryPath,Data.cFileName);
+            
+            fprintf(fp1, "%d %d %d %s %s/%s.wav\n",num1 , id1, count, Data.cFileName, directoryPath,Data.cFileName);
+            fprintf(fp2, "%d %d %s %s/%s.wav\n",num1++ , id1++, Data.cFileName, directoryPath,Data.cFileName);
             num=num1;
             id=id1;
         } 
         while (FindNextFile(hFind, &Data) != 0); 
         FindClose(hFind);// 关闭查找句柄
         fclose(fp1);
+        fclose(fp2);
 }
 
 void scanAndSaveMP3Files(const char *directoryPath) 
@@ -73,7 +78,9 @@ void scanAndSaveMP3Files(const char *directoryPath)
         return;
     }
         FILE *fp1;
+        FILE *fp2;
         fp1=fopen("Library/library.txt","a");
+        fp2=fopen("List/library.txt","a");
         do 
         {
             char *dotPos = strrchr(Data.cFileName, '.');// 找到文件名的后缀位置
@@ -82,12 +89,13 @@ void scanAndSaveMP3Files(const char *directoryPath)
                 *dotPos = '\0';// 将点号替换为空字符
             }
             printf("找到MP3文件: %s.mp3\n", Data.cFileName);
-            fprintf(fp1, "%d %d %d %s %s/%s.mp3\n",num2++ , id2++, count, Data.cFileName, directoryPath,Data.cFileName);
-            
+            fprintf(fp1, "%d %d %d %s %s/%s.mp3\n",num2 , id2, count, Data.cFileName, directoryPath,Data.cFileName);
+            fprintf(fp2, "%d %d %s %s/%s.mp3\n",num2++ , id2++, Data.cFileName, directoryPath,Data.cFileName);
         } 
         while (FindNextFile(hFind, &Data) != 0); 
         FindClose(hFind);// 关闭查找句柄
         fclose(fp1);
+        fclose(fp2);
 }
 
 void tihuan() 

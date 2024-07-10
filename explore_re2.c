@@ -102,7 +102,7 @@ void explore(struct song *s)
     }
 }
 
-void print(struct song *s)//´òÓ¡¸èÇúµ¥
+void printList(struct song *s)//´òÓ¡¸èÇúµ¥
 {
     struct song *p=s;
     while (p->next!=s)
