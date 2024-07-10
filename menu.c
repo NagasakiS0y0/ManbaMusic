@@ -60,6 +60,12 @@ void menu_re(Song *s)
     int i;
     while(1)
     {
+        FILE *fp5;
+        fp5=fopen("Library/library.txt","r");
+        free(s);
+        Song *s=NULL;
+        birthSongsFromFile(&s);
+        fclose(fp5);
         system("cls");
         printf("            Manba Music\n");
         printf("*************************************\n");
@@ -137,33 +143,6 @@ int main()
     return 0;
 }
     
-
-    //显示歌单列表
-    /*FILE *fp_log;
-    fp_log=fopen("listCatalog.txt","r");
-    if (fp_log==NULL)
-    {
-        printf("正在创建歌单。\n");
-        s=createFromLib();
-        FILE *fp_1;
-        fp_1=fopen("List/lib.txt","w");
-        while (s!=NULL)
-        {
-            fprintf(fp_1, "%d %d %s %s\n", &s->num, &s->id, s->name, s->address);
-            s=s->next;
-        }
-         fclose(fp_1);
-         fclose(fp_log);
-         fp_log=fopen("listCatalog.txt","w");
-
-    }
-    
-    readListsFromFile(&catalog);
-    printf("歌单列表如下:\n");
-    printListCatalog(catalog);
-    getchar();
-    free(catalog);
-    return 0;*/
 
 
 
