@@ -1,28 +1,51 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <windows.h>
 #include <conio.h>
 #include "song.h"
 #define LEN sizeof(struct song)    //歌单结构体长度
 
-void mainmenu();    //主菜单
 void searchmenu();    //搜索菜单
 void print(struct song *head);  //输出歌单
 void save(struct song *head);   //保存歌单
 Song *search(struct song *head,int l);   //搜索歌曲
 int getLength(struct song *head);   //获取歌单长度
-struct song *createFromLib();  //创建歌单
-struct song *createList(Song *lib);
+struct song *createFromLib();  //读取曲库
+struct song *createTempList(Song *lib);   //创建临时歌单
+
 
 int main()
 {
     Song *lib = createFromLib();
     print(lib);
-    Song *list = createList(lib);
+    Song *list = createTempList(lib);
     print(list);
+    save(list);
     getch();
     return 0;
 }
+
+
+/*
+void readSongsFromFile(Song **head,List *l) {
+    FILE *fp;
+    char newName[50];
+    char cache[216];
+    strcpy(cache,"List/");
+    printf("请输入新的歌单名称: ");
+    scanf("%49s", newName);
+    strcat(newName, ".txt"); // 添加 .txt 后缀
+    strcat(cache,newName);
+    FILE *fp2;
+    fp2=fopen(cache,"w");
+    if(fp2==NULL)   //打开文件失败
+    {
+        printf("Cannot open file!\n");
+        exit(0);
+    }
+}*/
+
 
 struct song *createFromLib()//    读取文件
 {
@@ -64,36 +87,57 @@ struct song *createFromLib()//    读取文件
     return(libHead);//返回歌单头指针
 }
 
-struct song *createList(Song *lib)//    读取文件
+struct song *createTempList(Song *lib)//    读取文件
 {
     struct song *head=NULL,*p1,*rear=NULL;//歌单头指针、局部指针、歌单尾指针
+    int flag=1;
     
-    p1=(struct song*)malloc(LEN);//创建新节点
-    if(p1==NULL){
-        printf("内存分配错误！\n");
-        exit(1);
-    }
-
-    Song *cache;
-    cache=(struct song*)malloc(LEN);
-
-    while(search(lib,getLength(lib))!=NULL)
+    while(flag)
     {
-        cache=search(lib,getLength(lib));
-        p1->num=cache->num;
-        p1->id=cache->id;
-        p1->count=cache->count;
-        strcpy(p1->name,cache->name);
-        strcpy(p1->address,cache->address);
-        if(head==NULL){//歌单为空
-            head=p1;//歌单头指针指向新节点
-        }else{
-            rear->next=p1;//歌单尾指针指向新节点
+        Song *cache = search(lib, getLength(lib));
+        if(cache==NULL)
+        {
+            // 用户选择了退出，设置标志为0以停止循环
+            flag = 0;
         }
-        rear=p1;
-        p1=(struct song*)malloc(LEN);//创建新节点
+        else
+        {
+            /*int same=0;
+            Song *p2;
+            for (p2 = head; p2 != NULL; p2 = p2->next)
+            {
+                printf("%s %s\n",p2->name,p2->address);
+                if (p2->id == cache->id)
+                {
+                    printf("这首歌曲的ID已经存在于歌单中，请重新选择。\n");
+                    same=1;
+                    break; // 跳出内层循环，重新选择歌曲
+                }
+            }
+            free(p2);
+            if(same==1)
+            {
+                continue;
+            }*/
+            p1=(struct song*)malloc(LEN);//创建新节点
+            p1->num=cache->num;
+            p1->id=cache->id;
+            p1->count=cache->count;
+            strcpy(p1->name,cache->name);
+            strcpy(p1->address,cache->address);
+            if(head==NULL){//歌单为空
+                head=p1;//歌单头指针指向新节点
+                head->next=NULL;
+            }else{
+                rear->next=p1;//歌单尾指针指向新节点
+            }
+            rear=p1;
+            p1=(struct song*)malloc(LEN);//创建新节点
+        }
+        if (rear != NULL) {
+        rear->next = NULL; // 歌单尾指针指向NULL
+        }
     }
-    rear->next=NULL;//歌单尾指针指向NULL
     int count=1;
     for(p1=head;p1!=NULL;p1=p1->next)     //遍历歌单，重新编号
         {
@@ -119,9 +163,15 @@ void save(struct song *head)    //保存歌单
 {
     struct song *p;
     p=head;
+    char newName[50];
+    char cache[216];
+    strcpy(cache,"List/");
+    printf("请输入新的歌单名称: ");
+    scanf("%49s", newName);
+    strcat(newName, ".txt"); // 添加 .txt 后缀
+    strcat(cache,newName);
     FILE *fp2;
-    fp2=fopen("song.txt","w");
-
+    fp2=fopen(cache,"w");
     if(fp2==NULL)   //打开文件失败
     {
         printf("Cannot open file!\n");
@@ -129,12 +179,11 @@ void save(struct song *head)    //保存歌单
     }
     while(p!=NULL)  //遍历歌单并写入文件
     {
-        fprintf(fp2,"%d  %s  %s\n",p->num,p->name);
+        fprintf(fp2,"%d %d %s %s\n",p->num,p->id,p->name,p->address);
         p=p->next;
     }
     fclose(fp2);    //关闭文件
 }
-
 
 Song *search(struct song *head, int l) // 查找歌曲
 {
@@ -145,6 +194,8 @@ Song *search(struct song *head, int l) // 查找歌曲
 
     while (1)
     {
+        system("cls");
+        print(head);
         searchmenu();
         scanf("%d", &flag);
         switch (flag)
@@ -236,13 +287,10 @@ int getLength(struct song *head)//获取歌单长度
 void searchmenu()//搜索菜单
 {
     printf("*******************************\n");
-    printf("*    搜索歌曲菜单              *\n");
-    printf("*    1. 按歌曲序号搜索         *\n");
-    printf("*    2. 按歌名搜索            *\n");
-    printf("*    3. 按歌手搜索            *\n");
+    printf("*    添加歌曲菜单              *\n");
+    printf("*    1. 按歌曲序号添加         *\n");
+    printf("*    2. 按歌名添加            *\n");
     printf("*    0. 返回主菜单             *\n");
     printf("*******************************\n");
-    printf("请选择搜索方式：[0-3] > ");
+    printf("请选择搜索方式：[0-2] > ");
 }
-
-
