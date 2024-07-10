@@ -277,10 +277,10 @@ int getLength(struct song *head)//获取歌单长度
 void searchmenu()//搜索菜单
 {
     printf("*******************************\n");
-    printf("*    添加歌曲菜单              *\n");
-    printf("*    1. 按歌曲序号添加         *\n");
-    printf("*    2. 按歌名添加            *\n");
-    printf("*    0. 返回主菜单             *\n");
+    printf("*        添加歌曲菜单\n");
+    printf("*       1. 按歌曲序号添加\n");
+    printf("*       2. 按歌名添加\n");
+    printf("*       0. 返回主菜单\n");
     printf("*******************************\n");
     printf("请选择搜索方式：[0-2] > ");
 }

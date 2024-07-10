@@ -59,20 +59,6 @@ void readList(char listName[50])
     fclose(fp1);
 }
 
-/*void createfolder()//创建存放歌单的文件夹
-{
-    char *folderPath[1024];
-    printf("请输入要创建的文件夹路径: ");
-    fgets(folderPath, sizeof(folderPath), stdin);
-    if (CreateDirectory(folderPath, NULL) != 0) 
-    {
-        printf("目录已创建: %s\n", folderPath);
-    } else {
-        perror("无法创建目录");
-        return 1;
-    }
-    return 0;
-}*/
 void scantxtFiles() 
 {
     int num3=1;
@@ -105,44 +91,3 @@ void scantxtFiles()
         fclose(fp_ca);
 }
 
-/*int main()
-{
-    int i;
-    printf("            Manba Music\n");
-    printf("*************************************\n");
-    printf("            1.创建歌单\n");
-    printf("            2.读取歌单\n");
-    printf("            0.返回\n");
-    printf("*************************************\n");
-    printf("请输入您的选择：[0-2]\n");
-    scanf("%d", &i);
-    while (1)
-    {
-        if (i == 1)
-        {
-            char listName[50];
-            printf("请输入歌单名称：");
-            scanf("%s.txt", listName);
-            createList(listName);
-
-            break;
-        }
-        else if (i == 2)
-        {
-            char listName[50];
-            printf("请输入歌单名称：");
-            scanf("%s.txt", listName);
-            readList(listName);
-            break;
-        }
-        else if (i == 0)
-        {
-            return 0;
-        }
-        else
-        {
-            printf("\n 输入错误，请重新输入！\n");
-        }
-    }
-    return 0;
-}*/
