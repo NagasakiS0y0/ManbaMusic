@@ -4,7 +4,8 @@
 #include <windows.h>
 #include <time.h>
 #include "song.h"
-#include "createLibrary.c"
+#include "createLibrary4.c"
+//#include "interface.c"
 //char folderPath[1024];
 
 
@@ -30,7 +31,7 @@ void createList(char listName[50])
             break;
         }
     }
-    FILE *fp2=fopen("all.txt","w");
+    FILE *fp2=fopen("listCatalog.txt","w");
     FILE *fp3=fopen(listName,"r");
     int num=1;
     WIN32_FIND_DATA Data;// 存储文件信息的结构体
@@ -72,12 +73,13 @@ void readList(char listName[50])
     }
     return 0;
 }*/
-/*void scantxtFiles(const char *folderPath) 
+void scantxtFiles() 
 {
+    int num3=1;
     WIN32_FIND_DATA Data;// 存储文件信息的结构体
     HANDLE hFind;// 查找句柄
     char Path[1024];// 定义一个字符串数组，用于存储搜索路径
-    snprintf(Path, sizeof(Path), "%s\\*.txt", folderPath);// 将 \*.txt 附加到文件夹路径后面
+    snprintf(Path, sizeof(Path), "%s\\*.txt", "List");// 将 \*.txt 附加到文件夹路径后面
     //printf("正在搜索txt文件\n");
     hFind = FindFirstFile(Path, &Data);
     if (hFind == INVALID_HANDLE_VALUE)// 如果找不到文件，则返回
@@ -85,13 +87,22 @@ void readList(char listName[50])
         printf("在目录中没有找到歌单文件。\n");
         return;
     }
+        FILE *fp_ca;
+        fp_ca=fopen("listCatalog.txt","w");
         do 
         {
-            printf("找到txt文件: %s\n", Data.cFileName);
+            char *dotPos = strrchr(Data.cFileName, '.');// 找到文件名的后缀位置
+            if (dotPos != NULL) // 删除文件名中的后缀
+            {
+                *dotPos = '\0';// 将点号替换为空字符
+            }
+            printf("找到歌单文件: %s.txt\n", Data.cFileName);
+            fprintf(fp_ca, "%d %s %s/%s.txt\n",num3++ ,Data.cFileName, "List",Data.cFileName);
+            num=num3;
         } 
         while (FindNextFile(hFind, &Data) != 0); 
         FindClose(hFind);// 关闭查找句柄
-}*/
+}
 
 /*int main()
 {
