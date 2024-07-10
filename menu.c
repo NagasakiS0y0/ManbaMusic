@@ -11,6 +11,26 @@
 #include "explore_re2.c"
 #include "song.h"
 
+
+void menu_manba()
+{
+    printf("正在读取音乐库文件。\n");
+    mciSendString("open \"resource/ManbaOut.mp3\" alias mp3", NULL, 0, NULL);
+    mciSendString("play mp3", NULL, 0, NULL);
+    char manba[30]={"Man what can I say! Manba out!"};
+    char *s=manba;
+    
+    while(*s!='\0')
+    {
+        Sleep(200);
+        printf("%c",*s);
+        s++;
+    }
+    printf("\n读取成功！");
+    Sleep(1500);
+    mciSendString("close mp3", NULL, 0, NULL);
+}
+
 void menu_pl(catalog)
 {
     char i;
@@ -116,10 +136,7 @@ int main()
     
     while (1)
     {
-        mciSendString("open \"resource/ManbaOut.mp3\" alias mp3", NULL, 0, NULL);
-        mciSendString("play mp3", NULL, 0, NULL);
-        Sleep(6000);
-        mciSendString("close mp3", NULL, 0, NULL);
+        menu_manba();
         system("cls");
         printf("            Manba Music\n");
         printf("*************************************\n");

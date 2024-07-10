@@ -33,7 +33,6 @@ void scanAndSaveWavFiles(const char *directoryPath)
     hFind = FindFirstFile(Path, &Data);
     if (hFind == INVALID_HANDLE_VALUE)// 如果找不到文件，则返回
     {
-        printf("在目录中没有找到wav文件。\n");
         return;
     }
         FILE *fp1;
@@ -74,7 +73,6 @@ void scanAndSaveMP3Files(const char *directoryPath)
 
     if (hFind == INVALID_HANDLE_VALUE)// 如果找不到文件，则返回
     {
-        printf("在目录中没有找到MP3文件。\n");
         return;
     }
         FILE *fp1;
