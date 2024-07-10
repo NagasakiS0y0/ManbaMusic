@@ -36,7 +36,7 @@ void addList(List **head, List *newList)
             return;
         }
         sscanf(buffer, "%d%49s%255s",&newList->listNum, newList->listName, newList->listAddress);
-       addList(head, newList);
+        addList(head, newList);
     }
     fclose(fp);
 }

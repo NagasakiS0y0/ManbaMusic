@@ -4,26 +4,24 @@
 #include <windows.h>
 #include <conio.h>
 #include "song.h"
-#define LEN sizeof(struct song)    //歌单结构体长度
 
 void searchmenu();    //搜索菜单
 void print(struct song *head);  //输出歌单
 void save(struct song *head);   //保存歌单
 Song *search(struct song *head,int l);   //搜索歌曲
 int getLength(struct song *head);   //获取歌单长度
-struct song *createFromLib();  //读取曲库
+struct song *createFromLib_list();  //读取曲库
 struct song *createTempList(Song *lib);   //创建临时歌单
 
 
-int main()
+void createList_zk()
 {
-    Song *lib = createFromLib();
+    Song *lib = createFromLib_list();
     print(lib);
     Song *list = createTempList(lib);
     print(list);
     save(list);
     getch();
-    return 0;
 }
 
 
@@ -47,7 +45,7 @@ void readSongsFromFile(Song **head,List *l) {
 }*/
 
 
-struct song *createFromLib()//    读取文件
+struct song *createFromLib_list()//    读取文件
 {
     struct song *libHead=NULL,*p1,*libRear=NULL;//曲库头指针、局部指针、歌单尾指针
 

@@ -5,7 +5,6 @@
 #include <conio.h>
 #include "song.h"
 #include "player.c"
-#define LEN sizeof(Song)    //歌单结构体长度
 
 // 函数声明
 Song *addSongFromLib();
@@ -22,7 +21,7 @@ void savePlaylistToFile(Song *head,List *l);
 void listMain(List *l) 
 {
     Song *head = NULL; // 初始化链表头指针
-
+    Song *current;
     readSongsFromFile(&head,l);   // 从文件中读取歌曲信息并构建链表
 
     char choice;
@@ -53,7 +52,7 @@ void listMain(List *l)
                 renamePlaylist(head,&l);
                 break;
             case '0':
-                Song *current = head->next;
+                current = head->next;
                 while (current != head) 
                 {
                     Song *next = current->next;
@@ -74,15 +73,15 @@ void listMain(List *l)
     return;
 }
 
-int main()
+/*int main()
 {
     List *l = (List*)malloc(sizeof(List));
     l->listNum=1;   //序号赋值
-    strcpy(l->listName,"list1");    //歌名赋值
-    strcpy(l->listAddress,"list1.txt");
+    strcpy(l->listName,"123");    //歌名赋值
+    strcpy(l->listAddress,"List/123.txt");
     listMain(l);
     return 0;
-}
+}*/
 
 void readSongsFromFile(Song **head,List *l) {
     FILE *fp;
@@ -155,17 +154,20 @@ void renamePlaylist(Song *head,List **l)
 {
     char newName[50];
     char cache[256];
+    char folder[10];
+    strcpy(folder,"List/");
     printf("请输入新的歌单名称: ");
     scanf("%49s", newName);
     strcpy(cache, newName);
     strcat(newName, ".txt"); // 添加 .txt 后缀
-    if (rename((*l)->listAddress, newName) != 0) {
+    strcat(folder, newName);
+    if (rename((*l)->listAddress, folder) != 0) {
         MessageBox(NULL, "重命名失败，请检查文件名或权限", "错误", MB_OK);      // 显示错误信息
     } else {
         MessageBox(NULL, "重命名成功", newName, MB_OK);     // 显示成功信息
     }
     strcpy((*l)->listName, cache);
-    strcpy((*l)->listAddress, newName);
+    strcpy((*l)->listAddress, folder);
 }
 
 void addSong(Song **head, List *l)
