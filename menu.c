@@ -102,8 +102,8 @@ void menu_manba()
         printf("%c",*s);
         s++;
     }
-    printf("\n读取成功！");
-    Sleep(1500);
+    printf("\n读取成功！\n");Sleep(1000);
+    printf("欢迎使用Manba Music！");Sleep(3000);
     mciSendString("close mp3", NULL, 0, NULL);
 }
 
