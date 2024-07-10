@@ -30,6 +30,8 @@ void player (Song *s)
 
 	while(1)
 	{
+        system("cls");
+        printSongList(s);
 		playermenu(s,m,f2);
         printf("ÇëÑ¡Ôñ[0-3]or[s/l/r] >");
 		n=getch();
@@ -270,16 +272,15 @@ void playcount(Song *s)
 void printSongList(Song *s) {
     Song *current = s;
     while (current->next != s) {
-        printf("%03d | %s\n", current->num, current->name);
+        printf("%03d |%s\n", current->num, current->name);
         current = current->next;
     }
-    printf("%03d | %s\n\n", current->num, current->name);
+    printf("%03d |%s\n\n", current->num,current->name);
 }
 
 void playermenu(Song *s,int m,int f2)
 {
-	system("cls");
-    printSongList(s);
+	
     switch(m)
     {
         case 0:{printf("[µ¥ÇúÑ­»·] ");break;}
