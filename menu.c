@@ -102,8 +102,10 @@ void menu_manba()
         printf("%c",*s);
         s++;
     }
-    printf("\n读取成功！\n");Sleep(1000);
-    printf("欢迎使用Manba Music！");Sleep(3000);
+    printf("\n读取成功！");
+    Sleep(1000);
+    printf("\n欢迎使用曼巴音乐播放器！");
+    Sleep(2000);
     mciSendString("close mp3", NULL, 0, NULL);
 }
 
@@ -195,7 +197,7 @@ void menu_re(Song *s)
 
 int main()
 {
-    menu_manba();
+    
     int i=0;
     List *catalog=NULL;
     Song *s=NULL;
@@ -207,10 +209,10 @@ int main()
         printf("正在创建音乐库文件。\n");
         createLibrary();
         tihuan();
-        printf("创建完成！\n");
     }
     fclose(fp_lib);
-    
+    system("cls");
+    menu_manba();
     while (1)
     {
         
