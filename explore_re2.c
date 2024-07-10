@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "song.h"
-#define LEN sizeof(struct song)
 void addTheSong(Song **head, Song *newSong)
 {
     if (*head == NULL) {

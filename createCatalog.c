@@ -42,11 +42,11 @@ void addList(List **head, List *newList)
 }
 
 void printListCatalog(List *head) {
-    List *current = head;
+    List *now = head;
     printf("¸èµ¥ÁÐ±í:\n");
-    while (current->next != NULL) {
-        printf("%03d | %s\n", current->listNum, current->listName);
-        current = current->next;
+    while (now->next != NULL) {
+        printf("%03d | %s\n", now->listNum, now->listName);
+        now = now->next;
     }
-    printf("%03d | %s\n", current->listNum, current->listName);
+    printf("%03d | %s\n", now->listNum, now->listName);
 }

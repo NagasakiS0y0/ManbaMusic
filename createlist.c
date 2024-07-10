@@ -102,6 +102,7 @@ void scantxtFiles()
         } 
         while (FindNextFile(hFind, &Data) != 0); 
         FindClose(hFind);// ¹Ø±Õ²éÕÒ¾ä±ú
+        fclose(fp_ca);
 }
 
 /*int main()
