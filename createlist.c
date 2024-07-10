@@ -5,49 +5,7 @@
 #include <time.h>
 #include "song.h"
 #include "createLibrary4.c"
-//#include "interface.c"
-//char folderPath[1024];
-
-
-void createList(char listName[50]) 
-{
-    FILE *fp1 = fopen("Library/library.txt", "r");
-    if (fp1 == NULL)
-    {
-        printf("未检测到音乐库，创建歌单失败!\n");
-        fclose(fp1);return; 
-    }
-    while (1) 
-    {
-        if (strlen(listName) > 50) 
-        {
-            printf("歌单名称过长，请重新输入！\n");
-            continue;
-        }
-        else 
-        {
-            FILE *fp2=fopen(listName,"w");
-            printf("歌单创建成功！\n");
-            break;
-        }
-    }
-    FILE *fp2=fopen("listCatalog.txt","w");
-    FILE *fp3=fopen(listName,"r");
-    int num=1;
-    WIN32_FIND_DATA Data;// 存储文件信息的结构体
-    HANDLE hFind;// 查找句柄
-    char Path[1024];
-    char address[1024];
-    snprintf(Path, sizeof(Path), "%s\\*.txt", a);// 将 \*.txt 附加到文件夹路径后面
-    hFind = FindFirstFile(Path, &Data);
-    strcpy(address, Path);
-    fprintf(fp1,"%d %s %s",num++ ,listName ,address);
-    FindClose(hFind);
-    fclose(fp1);
-    fclose(fp2);
-}
-
-void readList(char listName[50]) 
+void readList(char listName[50]) // 读取歌单文件
 {
     FILE *fp1 = fopen(listName, "r");
     if (fp1 == NULL)
@@ -55,7 +13,6 @@ void readList(char listName[50])
         printf("未检测到歌单!\n");
         fclose(fp1);return; 
     }
-    // 读取歌单文件
     fclose(fp1);
 }
 

@@ -7,47 +7,46 @@
 
 void searchmenu();    //搜索菜单
 void print(struct song *head);  //输出歌单
-void print2(struct song *head);
+void print2(struct song *head);//输出歌单
 void save(struct song *head);   //保存歌单
 Song *search(struct song *head,int l);   //搜索歌曲
 int getLength(struct song *head);   //获取歌单长度
 struct song *createFromLib_list();  //读取曲库
 struct song *createTempList(Song *lib);   //创建临时歌单
 
-
 void createList_zk()
 {
-    Song *lib = createFromLib_list();
+    Song *lib = createFromLib_list();//读取曲库
     print(lib);
-    Song *list = createTempList(lib);
+    Song *list = createTempList(lib);//创建临时歌单
     print2(list);
     save(list);
 }
 
-struct song *createFromLib_list()//    读取文件
+struct song *createFromLib_list()//读取曲库
 {
     struct song *libHead=NULL,*p1,*libRear=NULL;//曲库头指针、局部指针、歌单尾指针
-
     FILE *fp1;
     fp1=fopen("Library/library.txt","r");
-
     if(fp1==NULL)
     {
         printf("Cannot open file!\n");
         exit(0);
     }
-
     p1=(struct song*)malloc(LEN);//创建新节点
-
-    if(p1==NULL){
+    if(p1==NULL)
+    {
         printf("内存分配错误！\n");
         exit(1);
     }
     while(fscanf(fp1,"%d%d%d%s%s",&p1->num,&p1->id,&p1->count,p1->name,p1->address)!=EOF)//读取文件并判断读取是否结束
     {
-        if(libHead==NULL){//歌单为空
+        if(libHead==NULL)//歌单为空
+        {
             libHead=p1;//歌单头指针指向新节点
-        }else{
+        }
+        else
+        {
             libRear->next=p1;//歌单尾指针指向新节点
         }
         libRear=p1;
@@ -56,7 +55,7 @@ struct song *createFromLib_list()//    读取文件
     libRear->next=NULL;//歌单尾指针指向NULL
     fclose(fp1);
     int count=1;
-    for(p1=libHead;p1!=NULL;p1=p1->next)     //遍历歌单，重新编号
+    for(p1=libHead;p1!=NULL;p1=p1->next)//遍历歌单，重新编号
         {
             p1->num=count;
             count++;
@@ -64,58 +63,67 @@ struct song *createFromLib_list()//    读取文件
     return(libHead);//返回歌单头指针
 }
 
-struct song *createTempList(Song *lib)
+struct song *createTempList(Song *lib)//创建临时歌单
 {
     struct song *head = NULL, *p1, *rear = NULL;
-    int flag = 1;
-    
-    while(flag){
+    while(1)
+    {
         Song *cache = search(lib, getLength(lib));
-        if(cache == NULL){
-            flag = 0;
-        } else {
+        if(cache == NULL)
+        {
+            break;
+        } 
+        else 
+        {
             int same = 0;
             Song *p2;
-            for (p2 = head; p2 != NULL; p2 = p2->next){
-                if (p2->id == cache->id){
+            for (p2 = head; p2 != NULL; p2 = p2->next)
+            {
+                if (p2->id == cache->id)
+                {
                     MessageBox(NULL, "歌曲已存在", "错误", MB_OK);
                     same = 1;
                     break;
                 }
             }
-            if(same == 1){
+            if(same == 1)
+            {
                 continue;
             }
-            p1 = (struct song*)malloc(sizeof(struct song));
+            p1 = (struct song*)malloc(LEN);//创建新节点
             p1->num = cache->num;
             p1->id = cache->id;
             p1->count = cache->count;
             strcpy(p1->name, cache->name);
             strcpy(p1->address, cache->address);
             p1->next = NULL;
-            p1->prev = rear; // 设置前驱指针
-            if(head == NULL){ // 链表为空
+            p1->prev = rear;
+            if(head == NULL)
+            { 
                 head = p1;
                 rear = p1;
-            } else {
-                rear->next = p1; // 更新前一个节点的后继指针
+            } 
+            else //将p1添加至尾节点
+            {
+                rear->next = p1;
                 rear = p1;
             }
         }
     }
 
     // 创建循环链表
-    if (rear != NULL) {
+    if (rear != NULL) 
+    {
         rear->next = head; // 尾节点指向头节点
         head->prev = rear; // 头节点的前驱指针指向尾节点
     }
-
     int count = 1;
     struct song *p = head;
-    do { // 使用do-while循环确保至少执行一次
+    do // 使用do-while循环确保至少执行一次
+    { 
         p->num=count;
         count++;
-        p = p->next; // 移动到下一个节点
+        p = p->next;
     } while (p != head); // 当p再次回到头节点时，结束循环
     return head;
 }
@@ -139,13 +147,12 @@ void print2(struct song *head)   // 输出歌单
         printf("链表为空。\n");
         return;
     }
-
     p = head;
-    do { // 使用do-while循环确保至少执行一次
+    do 
+    {
         printf("%d  %s\n", p->num, p->name);
         p = p->next; // 移动到下一个节点
     } while (p != head); // 当p再次回到头节点时，结束循环
-
     printf("\n");
 }
 
@@ -167,12 +174,13 @@ void save(struct song *head)    //保存歌单
         printf("Cannot open file!\n");
         exit(0);
     }
-      //遍历歌单并写入文件
-    do{
+    //遍历歌单并写入文件
+    do
+    {
         fprintf(fp2,"%d %d %s %s\n",p->num,p->id,p->name,p->address);
         p=p->next;
     }while(p!=head);
-    fclose(fp2);    //关闭文件
+    fclose(fp2);//关闭文件
 }
 
 Song *search(struct song *head, int l) // 查找歌曲
@@ -181,7 +189,6 @@ Song *search(struct song *head, int l) // 查找歌曲
     char y[20];
     struct song *p;
     int found;
-
     while (1)
     {
         system("cls");
@@ -266,7 +273,7 @@ int getLength(struct song *head)//获取歌单长度
     int len=0;
     struct song *l;
     l=head;
-    while(l!=NULL)      //遍历歌单
+    while(l!=NULL)//遍历歌单
     {
         len++;
         l=l->next;

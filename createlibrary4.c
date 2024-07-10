@@ -100,14 +100,12 @@ void tihuan()
     FILE *fp1;
     FILE *fp2;
     char ch;
-
     // 打开文件用于读取
     fp1 = fopen("Library/library.txt", "r");
     if (fp1 == NULL) {
         printf("无法打开文件 %s\n", "library.txt");
         return;
     }
-
     // 创建临时文件用于写入
     fp2 = fopen("Library/temp.txt", "w");
     if (fp2 == NULL) 
@@ -116,7 +114,6 @@ void tihuan()
         fclose(fp1);
         return;
     }
-
     // 读取原文件内容，并进行替换，然后写入临时文件
     while ((ch = fgetc(fp1)) != EOF) {
         if (ch == '\\') {
@@ -133,7 +130,6 @@ void tihuan()
 
 void createLibrary() 
 {
-
     char directoryPath[256];
     printf("请输入要扫描的文件夹路径: ");
     fgets(directoryPath, sizeof(directoryPath), stdin);// 读取输入
@@ -148,4 +144,3 @@ void createLibrary()
     scanAndSaveMP3Files(directoryPath);// 扫描并保存.mp3文件
     printf("扫描完成，信息已保存到library.txt。\n");
 }
-
