@@ -218,39 +218,52 @@ void playcount(Song *s)
     FILE *fp;
     char line[256];
     int found = 0;
+    char *tempFile = "temp.txt";
 
-    fp = fopen("Library/library.txt", "r+");
+    fp = fopen("Library/library.txt", "r");
     if (fp == NULL) {
         printf("Error opening library.txt\n");
         return;
     }
 
-    while (fgets(line,sizeof(line),fp)){
+    // 创建临时文件用于写入更新后的数据
+    FILE *tempFp = fopen(tempFile, "w");
+    if (tempFp == NULL) {
+        printf("Error creating temp file\n");
+        fclose(fp);
+        return;
+    }
+
+    while (fgets(line, sizeof(line), fp))
+    {
         int num;
         int id;
         int count;
         char name[50];
         char address[256];
 
-        // 解析行中的数据
-        if (sscanf(line, "%d %d %d %49s %255s", &num,&id,&count,name,address)!=EOF) {
-            // 如果找到了匹配的ID
+        if (sscanf(line, "%d %d %d %49s %255s", &num, &id, &count, name, address) == 5) {
             if (id == s->id) {
                 count++; // 增加播放次数
-                if (count%10){
-                    fseek(fp, -strlen(line)-1, SEEK_CUR);   // 将文件指针移回到行的开始(位数未增加)
-                }else{
-                    fseek(fp, -strlen(line)-2, SEEK_CUR);   // 将文件指针移回到行的开始(位数增加)
-                }
-                fprintf(fp, "%d %d %d %s %s\n",num, id, count, name, address);  // 重写这一行
+                // 写入临时文件
+                fprintf(tempFp, "%d %d %d %s %s\n", num, id, count, name, address);
                 found = 1;
-                break; // 找到并修改后退出循环
+            } else {
+                // 如果不是目标歌曲，直接复制到临时文件
+                fputs(line, tempFp);
             }
         }
     }
+
     fclose(fp);
+    fclose(tempFp);
+
     if (!found) {
         printf("Song not found in the library.\n");
+    } else {
+        // 替换原文件
+        remove("Library/library.txt");
+        rename(tempFile, "Library/library.txt");
     }
 }
 

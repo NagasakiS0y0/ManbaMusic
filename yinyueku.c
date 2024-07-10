@@ -40,7 +40,7 @@ struct song * create()
     fp1=fopen("song.txt","r");
     if(fp1==NULL)
     {
-        puts("无法打开文件。");
+        puts("无法打开文件�?");
         exit(0);
     }
     while (fscanf(fp1,"%d%s%s",&p1->num,p1->name,p1->singer)!=EOF)
@@ -82,7 +82,7 @@ void save(struct song *head)
     fp2=fopen("song.txt","w");
     if(fp2==NULL)
     {
-        puts("无法打开文件。");
+        puts("无法打开文件�?");
         exit(0);
     }
     while (p!=NULL)
@@ -114,15 +114,15 @@ struct song *modify_Node(struct song *head, int x)
     }
     if (found == 1) 
     {
-        printf("请输入修改后的歌名: ");
+        printf("请输入修改后的歌�?: ");
         scanf("%s", p->name);
-        printf("请输入修改后的歌手: ");
+        printf("请输入修改后的歌�?: ");
         scanf("%s", p->singer);
         return head;
     } 
     else 
     {
-        printf("找不到数据!");
+        printf("找不到数�?!");
         return head;
     }
 }
@@ -160,7 +160,7 @@ struct song *Del_Node(struct song *head,int x)
     }
     else
     {
-        printf("找不到数据!");
+        printf("找不到数�?!");
     }
     return head;
 }
@@ -203,8 +203,8 @@ void search(char *way)
     WIN32_FIND_DATA Data;// 存储文件信息的结构体
     HANDLE hFind;// 查找句柄
 
-    char path[MAX_PATH];// 定义一个字符串数组，用于存储搜索路径
-    snprintf(path, sizeof(path), "%s\\*.mp3", way);// 将 \*.mp3 附加到文件夹路径后面
+    char path[MAX_PATH];// 定义一个字符串数组，用于存储搜索路�?
+    snprintf(path, sizeof(path), "%s\\*.mp3", way);// �? \*.mp3 附加到文件夹路径后面
 
     hFind = FindFirstFile(path, &Data);
 
@@ -224,7 +224,7 @@ void search(char *way)
                 *dotPos = '\0';
             }
             printf("找到MP3文件: %s.mp3\n", Data.cFileName);
-            fprintf(fp, "%d %s\n", num++, Data.cFileName); // 写入序号和文件名到 song.txt
+            fprintf(fp, "%d %s\n", num++, Data.cFileName); // 写入序号和文件名�? song.txt
         } 
         while (FindNextFile(hFind, &Data) != 0);
         FindClose(hFind);// 关闭查找句柄
@@ -274,7 +274,7 @@ int main()
     char x[20],y[20];
     struct song *h;
     printf("从文件读取数据\n");
-    char *way = "D:\\code\\C language\\7\\project\\c\\output";// 替换为实际路径
+    char *way = "D:\\code\\C language\\7\\project\\c\\output";// 替换为实际路�?
     search(way);// 调用 search 函数找出.mp3文件
     h=create();
     printf("创建的歌曲单如下:\n");
@@ -285,7 +285,7 @@ int main()
         scanf("%d",&i);
         switch (i)
         {
-            case 1:printf("请输入需要添加的歌曲（歌名 歌手）:\n");
+            case 1:printf("请输入需要添加的歌曲（歌�? 歌手�?:\n");
                 scanf("%s%s",&x,&y);
                 h=insert_Node(h,x,y);
                 paixu(h);
@@ -309,7 +309,7 @@ int main()
                 system("cls");
                 break;
             case 4:system("cls");
-                printf("歌曲单如下:\n");
+                printf("歌曲单如�?:\n");
                 print(h);
                 break;
             case 0:return 1;
