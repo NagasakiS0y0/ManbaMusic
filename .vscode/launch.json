@@ -11,7 +11,7 @@
             "environment": [],
             "externalConsole": true,
             "MIMode": "gdb",
-            "miDebuggerPath": "E:\\d\\mingw64\\bin\\gdb.exe",
+            "miDebuggerPath": "C:\\Program Files (x86)\\mingw64\\bin\\gdb.exe",
             "setupCommands": [
                 {
                     "description": "为 gdb 启用整齐打印",

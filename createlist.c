@@ -5,16 +5,6 @@
 #include <time.h>
 #include "song.h"
 #include "createLibrary4.c"
-void readList(char listName[50]) // 读取歌单文件
-{
-    FILE *fp1 = fopen(listName, "r");
-    if (fp1 == NULL)
-    {
-        printf("未检测到歌单!\n");
-        fclose(fp1);return; 
-    }
-    fclose(fp1);
-}
 
 void scantxtFiles() 
 {

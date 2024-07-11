@@ -122,10 +122,7 @@ void menu_pl(catalog)
         readListsFromFile(&catalog);
         system("cls");
         printListCatalog(catalog);
-        printf(" __  __           _            __  __         _   \n");
-        printf("|  \\/  |__ _ _ _ | |__  __ _  |  \\/  |_  _ __(_)__ \n");
-        printf("| |\\/| / _` | ' \\| '_ \\/ _` | | |\\/| | || (_-< / _|\n");
-        printf("|_|  |_\\__,_|_||_|_.__/\\__,_| |_|  |_|\\_,_/__/_\\__|\n");
+        printf("\n");
         printf("*****************************************************\n");
         printf("                  输入数字选择歌单       \n");
         printf("                 输入c创建新的歌单      \n");
@@ -212,7 +209,9 @@ int main()
     fp_lib=fopen("Library/library.txt","r");
     if (fp_lib == NULL)
     {
-        printf("正在创建音乐库文件。\n");
+        printf("首次启动，请指定创建音乐库。\n");
+        printf("测试请复制resource文件夹路径\n");
+        printf("路径示例：E:\\code\\ManbaMusic\\resource\n");
         createLibrary();
         tihuan();
     }

@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <conio.h>
 #include <stdlib.h>
-#include <pthread.h>
 #include <unistd.h>
 #include <windows.h>
 #include <mmsystem.h>
@@ -240,7 +239,7 @@ void printSongList(Song *s)     //打印歌曲列表
 
 void playermenu(Song *s,int m,int f2)       //播放界面
 {
-	
+	printf("\n***********************************************************\n");
     switch(m)
     {
         case 0:{printf("[单曲循环] ");break;}

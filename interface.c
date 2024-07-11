@@ -49,7 +49,7 @@ void listMain(List *l)      //歌单内部操作，接受指向歌单的指针，可调用
                 break;
             case '4':
                 renamePlaylist(head,&l);
-                break;
+                return;
             case '0':
                 current = head->next;
                 while (current != head) 
@@ -61,7 +61,7 @@ void listMain(List *l)      //歌单内部操作，接受指向歌单的指针，可调用
                 free(head);
                 return;
             default:
-                printf("无效的选择，请重新输入。\n");
+                MessageBox(NULL, "无效的选择！","错误！", MB_OK);;
                 break;
         }
     }
@@ -102,6 +102,9 @@ void selectSongToPlay(Song *head) {
         printSongList(head);
         printf("请输入要播放的歌曲编号（输入0返回）> ");
         scanf("%d",&choice);
+        if(choice==0){
+            return;
+        }
         current = head;
         while (current->num != choice) {
             if (current->next == head) {
@@ -239,18 +242,18 @@ Song *addSongFromLib()  //从曲库添加歌曲
         system("cls");
         printf("***************曲库***************\n");
         libPrint(h);    //输出歌单
-        printf("*********************************\n");
+        printf("**********************************\n");
         printf("1. 搜索序号添加     2. 搜索歌名添加\n");
         printf("0. 返回上级\n");
-        printf("*********************************\n");
+        printf("**********************************\n");
         printf("请选择功能：[0-2] > ");
         n=getch();
         switch (n)
         {
-        case 0:
+        case '0':
             free(h);
             return NULL;
-        case 1:
+        case '1':
             {
                 printf("请输入要搜索的歌曲序号\n");
                 scanf("%d", &m);
@@ -261,17 +264,16 @@ Song *addSongFromLib()  //从曲库添加歌曲
                     {
                         if (!found)
                         {
-                            printf("Song found!\n");
                             found = 1;
                         }
                         printf("%d  %s\n", p->num, p->name);
                         return p;
                     }
                 }
-                if (!found) printf("未找到匹配的歌曲\n");
+                if (!found) {MessageBox(NULL, "未找到匹配的歌曲！","错误！", MB_OK);}
                 break;
             }
-        case 2:
+        case '2':
             {
                 printf("请输入要搜索的歌曲名\n");
                 scanf("%s", y);
@@ -282,18 +284,17 @@ Song *addSongFromLib()  //从曲库添加歌曲
                     {
                         if (!found)
                         {
-                            printf("Song found!\n");
                             found = 1;
                         }
                         printf("%d  %s\n", p->num, p->name);
                         return p;
                     }
                 }
-                if (!found) printf("未找到匹配的歌曲\n");
+                if (!found) {MessageBox(NULL, "未找到匹配的歌曲！","错误！", MB_OK);}
                 break;
             }
         default:
-            printf("输入出错，请重试！\n");
+            MessageBox(NULL, "输入出错，请重试！","错误！", MB_OK);
             continue;
         }
     }
@@ -302,9 +303,14 @@ Song *addSongFromLib()  //从曲库添加歌曲
 void deleteSong(Song **head,List *l)    // 删除歌曲
 {
     int choice;
+    system("cls");
     printSongList(*head);
-    printf("请输入要删除的歌曲编号: ");
+    printf("请输入要删除的歌曲编号/输入0退出: ");
     scanf("%d", &choice);
+    if(choice==0)
+    {
+        return;
+    }
 
     Song *current = *head;
     Song *prev = NULL;
@@ -330,7 +336,7 @@ void deleteSong(Song **head,List *l)    // 删除歌曲
     } while (current != *head);
 
     if (current == *head) {
-        printf("歌曲编号不存在。\n");
+        MessageBox(NULL, "歌曲编号不存在！","错误！", MB_OK);
     }
     savePlaylistToFile(*head,l);
     renumberSongs(head); // 重编号

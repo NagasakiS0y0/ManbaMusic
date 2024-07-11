@@ -8,13 +8,15 @@ void scanAndSaveWavFiles(const char *directoryPath);
 void scanAndSaveMP3Files(const char *directoryPath);
 void createLibrary();
 char a[1024];
-int num,id;
+int num=1,id;
 
-int generateRandomID() {
-    static int seeded = 0;
-    if (!seeded) {
+int generateRandomID() 
+{
+    int a=0;
+    if (!a) 
+    {
         srand(time(NULL));
-        seeded = 1;
+        a=1;
     }
     return rand() % 9000 + 1000; 
 }
