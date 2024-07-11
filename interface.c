@@ -339,7 +339,6 @@ void deleteSong(Song **head,List *l)    // 删除歌曲
         MessageBox(NULL, "歌曲编号不存在！","错误！", MB_OK);
     }
     savePlaylistToFile(*head,l);
-    renumberSongs(head); // 重编号
 }
 
 void savePlaylistToFile(Song *head,List *l)     // 将歌单保存到文件

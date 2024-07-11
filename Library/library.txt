@@ -1,0 +1,6 @@
+1 4042 0 crush C:/Users/Ayaka/Desktop/ManbaMusic/resource/crush.wav
+2 4043 0 一年之诗 C:/Users/Ayaka/Desktop/ManbaMusic/resource/一年之诗.wav
+3 4044 0 angel_s_song C:/Users/Ayaka/Desktop/ManbaMusic/resource/angel_s_song.mp3
+4 4045 0 ManbaOut C:/Users/Ayaka/Desktop/ManbaMusic/resource/ManbaOut.mp3
+5 4046 0 see_you_again C:/Users/Ayaka/Desktop/ManbaMusic/resource/see_you_again.mp3
+6 4047 0 稻香 C:/Users/Ayaka/Desktop/ManbaMusic/resource/稻香.mp3
